@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Loader2, Save, Upload, Trash2, Phone } from "lucide-react";
+import { Loader2, Save, Upload, Trash2, Phone, Link2, Image as ImageIcon, Type } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteSettings, withDefaults, type SiteSettings, type SiteTexts } from "@/lib/settings";
 import { logAudit } from "@/lib/audit";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import languageBg from "@/assets/language-bg.jpeg.asset.json";
 
 export const Route = createFileRoute("/admin/settings")({
@@ -100,135 +101,152 @@ function SettingsPage() {
         </p>
       )}
 
-      <Section title="Contact" desc="Shown on language, booking, and success pages.">
-        <Field label="Contact phone number">
-          <input
-            type="tel"
-            value={draft.contact_phone ?? ""}
-            onChange={(e) => setDraft((d) => ({ ...d, contact_phone: e.target.value }))}
-            placeholder="+1 555 123 4567"
-            className="w-full rounded-xl border border-input bg-background px-4 py-2.5 text-sm"
-          />
-        </Field>
-        {draft.contact_phone && (
-          <button
-            onClick={() => setDraft((d) => ({ ...d, contact_phone: null }))}
-            className="mt-2 inline-flex items-center gap-1 text-xs text-destructive hover:underline"
-          >
-            <Trash2 className="h-3 w-3" /> Remove phone
-          </button>
-        )}
-      </Section>
+      <Tabs defaultValue="contact" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4">
+          <TabsTrigger value="contact" className="gap-2">
+            <Phone className="h-4 w-4" /> <span className="hidden sm:inline">Contact</span>
+          </TabsTrigger>
+          <TabsTrigger value="backgrounds" className="gap-2">
+            <ImageIcon className="h-4 w-4" /> <span className="hidden sm:inline">Backgrounds</span>
+          </TabsTrigger>
+          <TabsTrigger value="booking" className="gap-2">
+            <Link2 className="h-4 w-4" /> <span className="hidden sm:inline">Booking URL</span>
+          </TabsTrigger>
+          <TabsTrigger value="texts" className="gap-2">
+            <Type className="h-4 w-4" /> <span className="hidden sm:inline">Texts</span>
+          </TabsTrigger>
+        </TabsList>
 
-      <Section title="Booking Page Background" desc="Background image for the booking form page. JPG or PNG, under 4 MB.">
-        <div className="flex flex-wrap items-center gap-4">
-          <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-border bg-background px-4 py-2.5 text-sm hover:bg-accent">
-            <Upload className="h-4 w-4" />
-            Upload from PC
+        <TabsContent value="contact" className="mt-4">
+          <Section title="Contact" desc="Shown on language, booking, and success pages.">
+            <Field label="Contact phone number">
+              <input
+                type="tel"
+                value={draft.contact_phone ?? ""}
+                onChange={(e) => setDraft((d) => ({ ...d, contact_phone: e.target.value }))}
+                placeholder="+1 555 123 4567"
+                className="w-full rounded-xl border border-input bg-background px-4 py-2.5 text-sm"
+              />
+            </Field>
+            {draft.contact_phone && (
+              <button
+                onClick={() => setDraft((d) => ({ ...d, contact_phone: null }))}
+                className="mt-2 inline-flex items-center gap-1 text-xs text-destructive hover:underline"
+              >
+                <Trash2 className="h-3 w-3" /> Remove phone
+              </button>
+            )}
+          </Section>
+        </TabsContent>
+
+        <TabsContent value="backgrounds" className="mt-4">
+          <div className="grid gap-6 lg:grid-cols-2">
+            <Section title="Booking Page Background" desc="Background image for the booking form. JPG/PNG, under 4 MB.">
+              <ImageUploader
+                value={draft.background_image}
+                onPick={(f) => onImage(f, "background_image")}
+                onClear={() => setDraft((d) => ({ ...d, background_image: null }))}
+              />
+              <div className="mt-4">
+                <p className="mb-2 text-xs font-medium text-muted-foreground">Live preview</p>
+                <BookingPreview
+                  bg={draft.background_image}
+                  title={draft.texts_en.title || draft.texts_ar.title || ""}
+                  subtitle={draft.texts_en.subtitle ?? ""}
+                  firstNameLabel={draft.texts_en.firstNameLabel ?? "First Name"}
+                  lastNameLabel={draft.texts_en.lastNameLabel ?? "Last Name"}
+                  mobileLabel={draft.texts_en.mobileLabel ?? "Mobile Number"}
+                  submitLabel={draft.texts_en.submitLabel ?? "Confirm"}
+                  phone={draft.contact_phone}
+                />
+              </div>
+            </Section>
+
+            <Section title="Language Page Background" desc="Background for the language selection page. Independent of the booking page.">
+              <ImageUploader
+                value={draft.language_background}
+                onPick={(f) => onImage(f, "language_background")}
+                onClear={() => setDraft((d) => ({ ...d, language_background: null }))}
+              />
+              <div className="mt-4">
+                <p className="mb-2 text-xs font-medium text-muted-foreground">Live preview</p>
+                <div
+                  className="overflow-hidden rounded-xl border border-border"
+                  style={{
+                    backgroundImage: `url(${draft.language_background || languageBg.url})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundColor: "#ffffff",
+                    aspectRatio: "9 / 16",
+                    maxHeight: "520px",
+                  }}
+                />
+              </div>
+            </Section>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="booking" className="mt-4">
+          <Section title="Booking URL" desc="Used to generate the QR code.">
             <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => e.target.files?.[0] && onImage(e.target.files[0], "background_image")}
+              value={draft.booking_url ?? ""}
+              onChange={(e) => setDraft((d) => ({ ...d, booking_url: e.target.value }))}
+              placeholder={typeof window !== "undefined" ? window.location.origin : ""}
+              className="w-full rounded-xl border border-input bg-background px-4 py-2.5 text-sm"
             />
-          </label>
-          {draft.background_image && (
-            <button
-              onClick={() => setDraft((d) => ({ ...d, background_image: null }))}
-              className="inline-flex items-center gap-1 text-xs text-destructive hover:underline"
-            >
-              <Trash2 className="h-3 w-3" /> Remove image
-            </button>
-          )}
-        </div>
+          </Section>
+        </TabsContent>
 
-        <div className="mt-4">
-          <p className="mb-2 text-xs font-medium text-muted-foreground">
-            Live preview — booking page
-          </p>
-          <BookingPreview
-            bg={draft.background_image}
-            title={draft.texts_en.title || draft.texts_ar.title || ""}
-            subtitle={draft.texts_en.subtitle ?? ""}
-            firstNameLabel={draft.texts_en.firstNameLabel ?? "First Name"}
-            lastNameLabel={draft.texts_en.lastNameLabel ?? "Last Name"}
-            mobileLabel={draft.texts_en.mobileLabel ?? "Mobile Number"}
-            submitLabel={draft.texts_en.submitLabel ?? "Confirm"}
-            phone={draft.contact_phone}
-          />
-          <p className="mt-2 text-[11px] text-muted-foreground">
-            Changes shown here are not saved until you click <b>Save changes</b>.
-          </p>
-        </div>
-      </Section>
-
-      <Section title="Language Page Background" desc="Background image for the language selection page. Independent of the booking page. JPG or PNG, under 4 MB.">
-        <div className="flex flex-wrap items-center gap-4">
-          <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-border bg-background px-4 py-2.5 text-sm hover:bg-accent">
-            <Upload className="h-4 w-4" />
-            Upload from PC
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => e.target.files?.[0] && onImage(e.target.files[0], "language_background")}
+        <TabsContent value="texts" className="mt-4">
+          <div className="grid gap-6 lg:grid-cols-2">
+            <TextsEditor
+              title="Arabic Texts"
+              dir="rtl"
+              texts={draft.texts_ar}
+              onChange={(t) => setDraft((d) => ({ ...d, texts_ar: t }))}
             />
-          </label>
-          {draft.language_background && (
-            <button
-              onClick={() => setDraft((d) => ({ ...d, language_background: null }))}
-              className="inline-flex items-center gap-1 text-xs text-destructive hover:underline"
-            >
-              <Trash2 className="h-3 w-3" /> Remove image
-            </button>
-          )}
-        </div>
+            <TextsEditor
+              title="English Texts"
+              dir="ltr"
+              texts={draft.texts_en}
+              onChange={(t) => setDraft((d) => ({ ...d, texts_en: t }))}
+            />
+          </div>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
 
-        <div className="mt-4">
-          <p className="mb-2 text-xs font-medium text-muted-foreground">
-            Live preview — language page
-          </p>
-          <div
-            className="overflow-hidden rounded-xl border border-border"
-            style={{
-              backgroundImage: `url(${draft.language_background || languageBg.url})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundColor: "#ffffff",
-              aspectRatio: "9 / 16",
-              maxHeight: "520px",
-            }}
-          />
-          <p className="mt-2 text-[11px] text-muted-foreground">
-            Changes shown here are not saved until you click <b>Save changes</b>.
-          </p>
-        </div>
-      </Section>
-
-
-      <Section title="Booking URL" desc="Used to generate the QR code.">
+function ImageUploader({
+  value,
+  onPick,
+  onClear,
+}: {
+  value: string | null;
+  onPick: (file: File) => void;
+  onClear: () => void;
+}) {
+  return (
+    <div className="flex flex-wrap items-center gap-4">
+      <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-border bg-background px-4 py-2.5 text-sm hover:bg-accent">
+        <Upload className="h-4 w-4" />
+        Upload from PC
         <input
-          value={draft.booking_url ?? ""}
-          onChange={(e) => setDraft((d) => ({ ...d, booking_url: e.target.value }))}
-          placeholder={typeof window !== "undefined" ? window.location.origin : ""}
-          className="w-full rounded-xl border border-input bg-background px-4 py-2.5 text-sm"
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => e.target.files?.[0] && onPick(e.target.files[0])}
         />
-      </Section>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <TextsEditor
-          title="Arabic Texts"
-          dir="rtl"
-          texts={draft.texts_ar}
-          onChange={(t) => setDraft((d) => ({ ...d, texts_ar: t }))}
-        />
-        <TextsEditor
-          title="English Texts"
-          dir="ltr"
-          texts={draft.texts_en}
-          onChange={(t) => setDraft((d) => ({ ...d, texts_en: t }))}
-        />
-      </div>
+      </label>
+      {value && (
+        <button
+          onClick={onClear}
+          className="inline-flex items-center gap-1 text-xs text-destructive hover:underline"
+        >
+          <Trash2 className="h-3 w-3" /> Remove image
+        </button>
+      )}
     </div>
   );
 }
