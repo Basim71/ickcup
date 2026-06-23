@@ -98,8 +98,8 @@ function AdminShell({ children, email }: { children: React.ReactNode; email: str
         </div>
       </aside>
 
-      <div className="flex flex-1 flex-col">
-        <header className="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-border bg-card/80 px-4 backdrop-blur md:px-8">
+      <div className="flex min-w-0 flex-1 flex-col">
+        <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center justify-between border-b border-border bg-card/80 px-4 backdrop-blur md:px-8">
           <MobileNav nav={nav} />
           <div className="ml-auto flex items-center gap-2">
             <button
@@ -111,7 +111,7 @@ function AdminShell({ children, email }: { children: React.ReactNode; email: str
             </button>
           </div>
         </header>
-        <main className="flex-1 px-4 py-6 md:px-8 md:py-8">{children}</main>
+        <main className="flex-1 overflow-y-auto px-4 py-6 md:px-8 md:py-8">{children}</main>
       </div>
     </div>
   );
