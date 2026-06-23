@@ -121,7 +121,36 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_site_settings: {
+        Row: {
+          background_image: string | null
+          booking_url: string | null
+          created_at: string | null
+          id: string | null
+          texts_ar: Json | null
+          texts_en: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          background_image?: string | null
+          booking_url?: string | null
+          created_at?: string | null
+          id?: string | null
+          texts_ar?: Json | null
+          texts_en?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          background_image?: string | null
+          booking_url?: string | null
+          created_at?: string | null
+          id?: string | null
+          texts_ar?: Json | null
+          texts_en?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       has_role: {
