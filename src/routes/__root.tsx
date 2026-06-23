@@ -77,14 +77,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "ICKCUP" },
+      { name: "description", content: "Admin Hub Deluxe adds QR code management, contact number settings, and website customization to your admin dashboard." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "ICKCUP" },
+      { property: "og:description", content: "Admin Hub Deluxe adds QR code management, contact number settings, and website customization to your admin dashboard." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "ICKCUP" },
+      { name: "twitter:description", content: "Admin Hub Deluxe adds QR code management, contact number settings, and website customization to your admin dashboard." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/35e4f0f6-5d90-4a25-8cf3-38845000cf91/id-preview-aa4785a1--b2d3e42c-22fc-43cf-8d7c-24066f298b3f.lovable.app-1782253141198.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/35e4f0f6-5d90-4a25-8cf3-38845000cf91/id-preview-aa4785a1--b2d3e42c-22fc-43cf-8d7c-24066f298b3f.lovable.app-1782253141198.png" },
     ],
     links: [
       {
