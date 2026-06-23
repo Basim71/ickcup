@@ -34,9 +34,22 @@ function SettingsPage() {
     };
     let id = draft.id || live.id;
     try {
+      const { data: userData, error: userErr } = await supabase.auth.getUser();
+      if (userErr || !userData.user) {
+        throw new Error("You're signed out. Please sign in again as an admin.");
+      }
       if (id) {
-        const { error } = await supabase.from("settings").update(payload).eq("id", id);
+        const { data, error } = await supabase
+          .from("settings")
+          .update(payload)
+          .eq("id", id)
+          .select("id");
         if (error) throw error;
+        if (!data || data.length === 0) {
+          throw new Error(
+            "Saved nothing — your account is not allowed to edit settings (admin role required).",
+          );
+        }
       } else {
         const { data, error } = await supabase
           .from("settings")
