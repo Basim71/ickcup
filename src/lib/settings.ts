@@ -71,7 +71,7 @@ export function useSiteSettings() {
       const { data: authData } = await supabase.auth.getSession();
       const cols = authData.session
         ? "*"
-        : "id, background_image, language_background, booking_url, texts_ar, texts_en, created_at, updated_at";
+        : "id, contact_phone, background_image, language_background, booking_url, texts_ar, texts_en, created_at, updated_at";
       const { data } = await supabase
         .from("settings")
         .select(cols)
