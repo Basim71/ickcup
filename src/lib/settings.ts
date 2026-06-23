@@ -16,6 +16,7 @@ export type SiteSettings = {
   id: string;
   contact_phone: string | null;
   background_image: string | null;
+  language_background: string | null;
   booking_url: string | null;
   texts_ar: SiteTexts;
   texts_en: SiteTexts;
