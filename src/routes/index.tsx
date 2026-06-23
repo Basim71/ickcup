@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Phone, Sparkles } from "lucide-react";
 import { useSiteSettings } from "@/lib/settings";
-import languageBg from "@/assets/language-bg.jpeg.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -15,12 +14,12 @@ export const Route = createFileRoute("/")({
 
 function LanguagePage() {
   const { settings } = useSiteSettings();
-  const bg = settings.language_background || languageBg.url;
+  const bg = settings.language_background;
   return (
     <div
       className="relative flex min-h-[100dvh] flex-col"
       style={{
-        backgroundImage: `url(${bg})`,
+        backgroundImage: bg ? `url(${bg})` : undefined,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
