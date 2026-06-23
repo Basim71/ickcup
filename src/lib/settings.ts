@@ -48,6 +48,7 @@ export function withDefaults(s: SiteSettings | null): SiteSettings {
     id: s?.id ?? "",
     contact_phone: s?.contact_phone ?? null,
     background_image: s?.background_image ?? null,
+    language_background: s?.language_background ?? null,
     booking_url: s?.booking_url ?? null,
     texts_ar: { ...DEFAULT_AR, ...(s?.texts_ar ?? {}) },
     texts_en: { ...DEFAULT_EN, ...(s?.texts_en ?? {}) },
