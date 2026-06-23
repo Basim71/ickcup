@@ -71,26 +71,26 @@ function BookPage() {
           : undefined
       }
     >
-      <main className="flex flex-1 items-center justify-center px-6 py-16">
+      <main className="flex flex-1 items-center justify-center px-4 py-8 sm:px-6 sm:py-16">
         <form
           onSubmit={onSubmit}
-          className="glass w-full max-w-md rounded-3xl border border-border p-8 shadow-[var(--shadow-soft)]"
+          className="glass w-full max-w-md rounded-2xl border border-border p-5 shadow-[var(--shadow-soft)] sm:rounded-3xl sm:p-8"
         >
-          <h1 className="text-3xl font-semibold tracking-tight">{t.title}</h1>
-          <p className="mt-2 text-sm text-muted-foreground">{t.subtitle}</p>
+          <h1 className="text-xl font-semibold tracking-tight sm:text-3xl">{t.title}</h1>
+          <p className="mt-1 text-xs text-muted-foreground sm:mt-2 sm:text-sm">{t.subtitle}</p>
 
-          <div className="mt-8 space-y-5">
+          <div className="mt-5 space-y-3 sm:mt-8 sm:space-y-5">
             <div>
-              <label className="mb-1.5 block text-sm font-medium">{t.fullNameLabel}</label>
+              <label className="mb-1 block text-xs font-medium sm:mb-1.5 sm:text-sm">{t.fullNameLabel}</label>
               <input
                 name="full_name"
                 required
                 maxLength={120}
-                className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className="w-full rounded-lg border border-input bg-background px-3 py-2.5 text-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20 sm:rounded-xl sm:px-4 sm:py-3"
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-sm font-medium">{t.mobileLabel}</label>
+              <label className="mb-1 block text-xs font-medium sm:mb-1.5 sm:text-sm">{t.mobileLabel}</label>
               <input
                 name="mobile_number"
                 required
@@ -98,19 +98,19 @@ function BookPage() {
                 inputMode="tel"
                 dir="ltr"
                 placeholder="+1 555 123 4567"
-                className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className="w-full rounded-lg border border-input bg-background px-3 py-2.5 text-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20 sm:rounded-xl sm:px-4 sm:py-3"
               />
             </div>
           </div>
 
           {error && (
-            <p className="mt-4 rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</p>
+            <p className="mt-3 rounded-lg bg-destructive/10 px-3 py-2 text-xs text-destructive sm:mt-4 sm:text-sm">{error}</p>
           )}
 
           <button
             type="submit"
             disabled={submitting}
-            className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition-all hover:shadow-[var(--shadow-glow)] disabled:opacity-60"
+            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-all hover:shadow-[var(--shadow-glow)] disabled:opacity-60 sm:mt-8 sm:rounded-xl sm:py-3"
           >
             {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
             {t.submitLabel}
