@@ -58,12 +58,12 @@ function AdminShell({ children, email }: { children: React.ReactNode; email: str
     navigate({ to: "/admin/auth" });
   };
 
-  const nav = [
+  const nav: { to: string; label: string; icon: React.ComponentType<{ className?: string }>; exact?: boolean }[] = [
     { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
     { to: "/admin/bookings", label: "Bookings", icon: CalendarDays },
     { to: "/admin/qr", label: "QR Code", icon: QrCode },
     { to: "/admin/settings", label: "Settings", icon: SettingsIcon },
-  ] as const;
+  ];
 
   return (
     <div className="flex min-h-screen bg-background text-foreground">
