@@ -22,22 +22,22 @@ export type SiteSettings = {
 };
 
 const DEFAULT_AR: SiteTexts = {
-  title: "احجز موعدك",
+  title: "",
   subtitle: "نتطلع لاستقبالك. يرجى تعبئة بياناتك أدناه.",
   fullNameLabel: "الاسم الكامل",
   mobileLabel: "رقم الجوال",
-  submitLabel: "تأكيد الحجز",
-  successTitle: "تم استلام حجزك",
+  submitLabel: "تأكيد",
+  successTitle: "تم استلام طلبك",
   successMessage: "شكراً لك. سنتواصل معك قريباً لتأكيد التفاصيل.",
   selectLanguage: "اختر اللغة",
 };
 const DEFAULT_EN: SiteTexts = {
-  title: "Book Your Appointment",
+  title: "",
   subtitle: "We look forward to welcoming you. Please fill in your details.",
   fullNameLabel: "Full Name",
   mobileLabel: "Mobile Number",
-  submitLabel: "Confirm Booking",
-  successTitle: "Booking received",
+  submitLabel: "Confirm",
+  successTitle: "Request received",
   successMessage: "Thank you. We will contact you shortly to confirm the details.",
   selectLanguage: "Choose your language",
 };

@@ -5,7 +5,7 @@ import { useSiteSettings } from "@/lib/settings";
 
 export const Route = createFileRoute("/success")({
   validateSearch: z.object({ lang: z.enum(["ar", "en"]).catch("en") }),
-  head: () => ({ meta: [{ title: "Booking confirmed" }] }),
+  head: () => ({ meta: [{ title: "Confirmed" }] }),
   component: SuccessPage,
 });
 

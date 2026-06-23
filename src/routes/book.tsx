@@ -10,7 +10,7 @@ const searchSchema = z.object({ lang: z.enum(["ar", "en"]).catch("en") });
 export const Route = createFileRoute("/book")({
   validateSearch: searchSchema,
   head: () => ({
-    meta: [{ title: "Book your appointment" }],
+    meta: [{ title: "Your details" }],
   }),
   component: BookPage,
 });

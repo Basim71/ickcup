@@ -5,7 +5,7 @@ import { useSiteSettings } from "@/lib/settings";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Booking — Choose your language" },
+      { title: "Choose your language" },
       { name: "description", content: "Select your preferred language to book an appointment." },
     ],
   }),
@@ -32,7 +32,7 @@ function LanguagePage() {
         <div className="glass mx-auto w-full max-w-xl rounded-2xl border border-border p-5 shadow-[var(--shadow-soft)] sm:rounded-3xl sm:p-10">
           <div className="mb-4 flex justify-center sm:mb-8">
             <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-[10px] font-medium uppercase tracking-widest text-primary sm:px-4 sm:py-1.5 sm:text-xs">
-              <Sparkles className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> Booking
+              <Sparkles className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> Welcome
             </span>
           </div>
           <h1 className="text-center text-xl font-semibold tracking-tight text-foreground sm:text-4xl">
