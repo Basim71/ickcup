@@ -72,6 +72,7 @@ export type Database = {
           contact_phone: string | null
           created_at: string
           id: string
+          language_background: string | null
           texts_ar: Json
           texts_en: Json
           updated_at: string
@@ -82,6 +83,7 @@ export type Database = {
           contact_phone?: string | null
           created_at?: string
           id?: string
+          language_background?: string | null
           texts_ar?: Json
           texts_en?: Json
           updated_at?: string
@@ -92,6 +94,7 @@ export type Database = {
           contact_phone?: string | null
           created_at?: string
           id?: string
+          language_background?: string | null
           texts_ar?: Json
           texts_en?: Json
           updated_at?: string
