@@ -23,6 +23,7 @@ function SettingsPage() {
     const payload = {
       contact_phone: draft.contact_phone,
       background_image: draft.background_image,
+      language_background: draft.language_background,
       booking_url: draft.booking_url,
       texts_ar: draft.texts_ar as never,
       texts_en: draft.texts_en as never,
@@ -39,14 +40,17 @@ function SettingsPage() {
     setSaving(false);
   };
 
-  const onImage = async (file: File) => {
+  const onImage = async (
+    file: File,
+    field: "background_image" | "language_background",
+  ) => {
     if (file.size > 4_000_000) {
       alert("Image must be under 4 MB");
       return;
     }
     const reader = new FileReader();
     reader.onload = () =>
-      setDraft((d) => ({ ...d, background_image: reader.result as string }));
+      setDraft((d) => ({ ...d, [field]: reader.result as string }));
     reader.readAsDataURL(file);
   };
 
