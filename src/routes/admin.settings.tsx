@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Loader2, Save, Upload, Trash2 } from "lucide-react";
+import { Loader2, Save, Upload, Trash2, Phone } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteSettings, withDefaults, type SiteSettings, type SiteTexts } from "@/lib/settings";
 import { logAudit } from "@/lib/audit";
+import languageBg from "@/assets/language-bg.jpeg.asset.json";
 
 export const Route = createFileRoute("/admin/settings")({
   component: SettingsPage,
@@ -91,7 +92,7 @@ function SettingsPage() {
         )}
       </Section>
 
-      <Section title="Background Image" desc="Used on public pages. JPG or PNG, under 4 MB.">
+      <Section title="Background Image" desc="Used on language and booking pages. JPG or PNG, under 4 MB.">
         <div className="flex flex-wrap items-center gap-4">
           <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-border bg-background px-4 py-2.5 text-sm hover:bg-accent">
             <Upload className="h-4 w-4" />
@@ -112,11 +113,24 @@ function SettingsPage() {
             </button>
           )}
         </div>
-        {draft.background_image && (
-          <div className="mt-4 overflow-hidden rounded-xl border border-border">
-            <img src={draft.background_image} alt="Background preview" className="h-48 w-full object-cover" />
-          </div>
-        )}
+
+        <div className="mt-4">
+          <p className="mb-2 text-xs font-medium text-muted-foreground">
+            Live preview — booking page
+          </p>
+          <BookingPreview
+            bg={draft.background_image}
+            title={draft.texts_en.title || draft.texts_ar.title || ""}
+            subtitle={draft.texts_en.subtitle ?? ""}
+            fullNameLabel={draft.texts_en.fullNameLabel ?? "Full Name"}
+            mobileLabel={draft.texts_en.mobileLabel ?? "Mobile Number"}
+            submitLabel={draft.texts_en.submitLabel ?? "Confirm"}
+            phone={draft.contact_phone}
+          />
+          <p className="mt-2 text-[11px] text-muted-foreground">
+            Changes shown here are not saved until you click <b>Save changes</b>.
+          </p>
+        </div>
       </Section>
 
       <Section title="Booking URL" desc="Used to generate the QR code.">
@@ -203,6 +217,71 @@ function TextsEditor({
             />
           </div>
         ))}
+      </div>
+    </div>
+  );
+}
+
+function BookingPreview({
+  bg,
+  title,
+  subtitle,
+  fullNameLabel,
+  mobileLabel,
+  submitLabel,
+  phone,
+}: {
+  bg: string | null;
+  title: string;
+  subtitle: string;
+  fullNameLabel: string;
+  mobileLabel: string;
+  submitLabel: string;
+  phone: string | null;
+}) {
+  const image = bg || languageBg.url;
+  return (
+    <div
+      className="relative overflow-hidden rounded-xl border border-border"
+      style={{
+        backgroundImage: `url(${image})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundColor: "#ffffff",
+        aspectRatio: "9 / 16",
+        maxHeight: "520px",
+      }}
+    >
+      <div className="absolute inset-0 flex flex-col">
+        <div className="flex flex-1 items-center justify-center p-4">
+          <div className="w-full max-w-[260px] rounded-2xl border border-white/40 bg-white/85 p-4 shadow-xl backdrop-blur">
+            {title && (
+              <div className="text-base font-semibold tracking-tight text-foreground">{title}</div>
+            )}
+            {subtitle && <div className="mt-1 text-[11px] text-muted-foreground">{subtitle}</div>}
+            <div className="mt-3 space-y-2">
+              <div>
+                <div className="mb-1 text-[10px] font-medium text-foreground">{fullNameLabel}</div>
+                <div className="h-7 rounded-md border border-input bg-background" />
+              </div>
+              <div>
+                <div className="mb-1 text-[10px] font-medium text-foreground">{mobileLabel}</div>
+                <div className="h-7 rounded-md border border-input bg-background" />
+              </div>
+            </div>
+            <div className="mt-3 grid h-8 place-items-center rounded-md bg-primary text-[11px] font-semibold text-primary-foreground">
+              {submitLabel}
+            </div>
+          </div>
+        </div>
+        {phone && (
+          <div className="flex justify-center pb-4">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/85 px-3 py-1 text-[10px] text-foreground backdrop-blur">
+              <Phone className="h-3 w-3" />
+              {phone}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
