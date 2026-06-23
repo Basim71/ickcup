@@ -96,7 +96,7 @@ function SettingsPage() {
         )}
       </Section>
 
-      <Section title="Background Image" desc="Used on language and booking pages. JPG or PNG, under 4 MB.">
+      <Section title="Booking Page Background" desc="Background image for the booking form page. JPG or PNG, under 4 MB.">
         <div className="flex flex-wrap items-center gap-4">
           <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-border bg-background px-4 py-2.5 text-sm hover:bg-accent">
             <Upload className="h-4 w-4" />
@@ -105,7 +105,7 @@ function SettingsPage() {
               type="file"
               accept="image/*"
               className="hidden"
-              onChange={(e) => e.target.files?.[0] && onImage(e.target.files[0])}
+              onChange={(e) => e.target.files?.[0] && onImage(e.target.files[0], "background_image")}
             />
           </label>
           {draft.background_image && (
@@ -136,6 +136,50 @@ function SettingsPage() {
           </p>
         </div>
       </Section>
+
+      <Section title="Language Page Background" desc="Background image for the language selection page. Independent of the booking page. JPG or PNG, under 4 MB.">
+        <div className="flex flex-wrap items-center gap-4">
+          <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-border bg-background px-4 py-2.5 text-sm hover:bg-accent">
+            <Upload className="h-4 w-4" />
+            Upload from PC
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => e.target.files?.[0] && onImage(e.target.files[0], "language_background")}
+            />
+          </label>
+          {draft.language_background && (
+            <button
+              onClick={() => setDraft((d) => ({ ...d, language_background: null }))}
+              className="inline-flex items-center gap-1 text-xs text-destructive hover:underline"
+            >
+              <Trash2 className="h-3 w-3" /> Remove image
+            </button>
+          )}
+        </div>
+
+        <div className="mt-4">
+          <p className="mb-2 text-xs font-medium text-muted-foreground">
+            Live preview — language page
+          </p>
+          <div
+            className="overflow-hidden rounded-xl border border-border"
+            style={{
+              backgroundImage: `url(${draft.language_background || languageBg.url})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundColor: "#ffffff",
+              aspectRatio: "9 / 16",
+              maxHeight: "520px",
+            }}
+          />
+          <p className="mt-2 text-[11px] text-muted-foreground">
+            Changes shown here are not saved until you click <b>Save changes</b>.
+          </p>
+        </div>
+      </Section>
+
 
       <Section title="Booking URL" desc="Used to generate the QR code.">
         <input
