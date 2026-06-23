@@ -66,8 +66,9 @@ function AdminShell({ children, email }: { children: React.ReactNode; email: str
   ];
 
   return (
-    <div className="flex min-h-screen bg-background text-foreground">
+    <div className="flex h-[100dvh] overflow-hidden bg-background text-foreground">
       <aside className="hidden w-64 shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground md:flex">
+
         <div className="px-6 py-6">
           <div className="text-sm font-semibold uppercase tracking-widest text-sidebar-primary">Admin</div>
           <div className="mt-1 text-xs text-muted-foreground">Booking control center</div>
