@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Phone, Sparkles } from "lucide-react";
 import { useSiteSettings } from "@/lib/settings";
+import languageBg from "@/assets/language-bg.jpeg.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -14,19 +15,16 @@ export const Route = createFileRoute("/")({
 
 function LanguagePage() {
   const { settings } = useSiteSettings();
-  const bg = settings.background_image;
   return (
     <div
-      className="relative flex min-h-screen flex-col bg-hero"
-      style={
-        bg
-          ? {
-              backgroundImage: `linear-gradient(180deg, oklch(0 0 0 / 0.45), oklch(0 0 0 / 0.55)), url(${bg})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }
-          : undefined
-      }
+      className="relative flex min-h-screen flex-col"
+      style={{
+        backgroundImage: `url(${languageBg.url})`,
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+        backgroundColor: "#ffffff",
+      }}
     >
       <main className="flex flex-1 items-center justify-center px-4 py-8 sm:px-6 sm:py-16">
         <div className="glass mx-auto w-full max-w-xl rounded-2xl border border-border p-5 shadow-[var(--shadow-soft)] sm:rounded-3xl sm:p-10">
