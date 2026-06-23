@@ -4,6 +4,7 @@ import { z } from "zod";
 import { Phone, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteSettings } from "@/lib/settings";
+import languageBg from "@/assets/language-bg.jpeg.asset.json";
 
 const searchSchema = z.object({ lang: z.enum(["ar", "en"]).catch("en") });
 
