@@ -17,7 +17,8 @@ export const Route = createFileRoute("/book")({
 });
 
 const bookingSchema = z.object({
-  full_name: z.string().trim().min(1).max(120),
+  first_name: z.string().trim().min(1, "First name is required").max(60),
+  last_name: z.string().trim().min(1, "Last name is required").max(60),
   mobile_number: z
     .string()
     .trim()
@@ -40,7 +41,8 @@ function BookPage() {
     setError(null);
     const form = new FormData(e.currentTarget);
     const parsed = bookingSchema.safeParse({
-      full_name: form.get("full_name"),
+      first_name: form.get("first_name"),
+      last_name: form.get("last_name"),
       mobile_number: form.get("mobile_number"),
     });
     if (!parsed.success) {
@@ -48,7 +50,10 @@ function BookPage() {
       return;
     }
     setSubmitting(true);
-    const { error: err } = await supabase.from("bookings").insert({ ...parsed.data, language: lang });
+    const full_name = `${parsed.data.first_name} ${parsed.data.last_name}`.trim();
+    const { error: err } = await supabase
+      .from("bookings")
+      .insert({ full_name, mobile_number: parsed.data.mobile_number, language: lang });
     setSubmitting(false);
     if (err) {
       setError(err.message);
