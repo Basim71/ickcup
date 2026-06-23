@@ -56,20 +56,18 @@ function BookPage() {
     navigate({ to: "/success", search: { lang } });
   };
 
-  const bg = settings.background_image;
+  const bg = settings.background_image || languageBg.url;
   return (
     <div
-      className="relative flex min-h-screen flex-col bg-hero"
+      className="relative flex min-h-screen flex-col"
       dir={dir}
-      style={
-        bg
-          ? {
-              backgroundImage: `linear-gradient(180deg, oklch(0 0 0 / 0.5), oklch(0 0 0 / 0.6)), url(${bg})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }
-          : undefined
-      }
+      style={{
+        backgroundImage: `url(${bg})`,
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+        backgroundColor: "#ffffff",
+      }}
     >
       <main className="flex flex-1 items-center justify-center px-4 py-8 sm:px-6 sm:py-16">
         <form
