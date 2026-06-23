@@ -76,8 +76,8 @@ function BookPage() {
           onSubmit={onSubmit}
           className="glass w-full max-w-md rounded-2xl border border-border p-5 shadow-[var(--shadow-soft)] sm:rounded-3xl sm:p-8"
         >
-          <h1 className="text-xl font-semibold tracking-tight sm:text-3xl">{t.title}</h1>
-          <p className="mt-1 text-xs text-muted-foreground sm:mt-2 sm:text-sm">{t.subtitle}</p>
+          {t.title && <h1 className="text-xl font-semibold tracking-tight sm:text-3xl">{t.title}</h1>}
+          <p className={`text-xs text-muted-foreground sm:text-sm ${t.title ? "mt-1 sm:mt-2" : ""}`}>{t.subtitle}</p>
 
           <div className="mt-5 space-y-3 sm:mt-8 sm:space-y-5">
             <div>
