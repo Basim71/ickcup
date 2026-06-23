@@ -221,3 +221,68 @@ function TextsEditor({
     </div>
   );
 }
+
+function BookingPreview({
+  bg,
+  title,
+  subtitle,
+  fullNameLabel,
+  mobileLabel,
+  submitLabel,
+  phone,
+}: {
+  bg: string | null;
+  title: string;
+  subtitle: string;
+  fullNameLabel: string;
+  mobileLabel: string;
+  submitLabel: string;
+  phone: string | null;
+}) {
+  const image = bg || languageBg.url;
+  return (
+    <div
+      className="relative overflow-hidden rounded-xl border border-border"
+      style={{
+        backgroundImage: `url(${image})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundColor: "#ffffff",
+        aspectRatio: "9 / 16",
+        maxHeight: "520px",
+      }}
+    >
+      <div className="absolute inset-0 flex flex-col">
+        <div className="flex flex-1 items-center justify-center p-4">
+          <div className="w-full max-w-[260px] rounded-2xl border border-white/40 bg-white/85 p-4 shadow-xl backdrop-blur">
+            {title && (
+              <div className="text-base font-semibold tracking-tight text-foreground">{title}</div>
+            )}
+            {subtitle && <div className="mt-1 text-[11px] text-muted-foreground">{subtitle}</div>}
+            <div className="mt-3 space-y-2">
+              <div>
+                <div className="mb-1 text-[10px] font-medium text-foreground">{fullNameLabel}</div>
+                <div className="h-7 rounded-md border border-input bg-background" />
+              </div>
+              <div>
+                <div className="mb-1 text-[10px] font-medium text-foreground">{mobileLabel}</div>
+                <div className="h-7 rounded-md border border-input bg-background" />
+              </div>
+            </div>
+            <div className="mt-3 grid h-8 place-items-center rounded-md bg-primary text-[11px] font-semibold text-primary-foreground">
+              {submitLabel}
+            </div>
+          </div>
+        </div>
+        {phone && (
+          <div className="flex justify-center pb-4">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/85 px-3 py-1 text-[10px] text-foreground backdrop-blur">
+              <Phone className="h-3 w-3" />
+              {phone}
+            </span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
