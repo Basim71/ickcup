@@ -75,10 +75,11 @@ function BookPage() {
         backgroundColor: "#ffffff",
       }}
     >
-      <main className="flex flex-1 items-center justify-center px-4 py-8 sm:px-6 sm:py-16">
+      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/50" />
+      <main className="relative flex flex-1 items-center justify-center px-4 py-8 sm:px-6 sm:py-16">
         <form
           onSubmit={onSubmit}
-          className="glass w-full max-w-md rounded-2xl border border-border p-5 shadow-[var(--shadow-soft)] sm:rounded-3xl sm:p-8"
+          className="glass-strong w-full max-w-md rounded-3xl border border-white/20 p-6 shadow-2xl sm:p-8"
         >
           {t.title && <h1 className="text-xl font-semibold tracking-tight sm:text-3xl">{t.title}</h1>}
           <p className={`text-xs text-muted-foreground sm:text-sm ${t.title ? "mt-1 sm:mt-2" : ""}`}>{t.subtitle}</p>
@@ -91,7 +92,7 @@ function BookPage() {
                   name="first_name"
                   required
                   maxLength={60}
-                  className="w-full rounded-lg border border-input bg-background px-3 py-2.5 text-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20 sm:rounded-xl sm:px-4 sm:py-3"
+                  className="w-full rounded-xl border border-white/30 bg-background/80 px-3 py-2.5 text-sm outline-none backdrop-blur transition-colors focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 sm:px-4 sm:py-3"
                 />
               </div>
               <div>
@@ -100,7 +101,7 @@ function BookPage() {
                   name="last_name"
                   required
                   maxLength={60}
-                  className="w-full rounded-lg border border-input bg-background px-3 py-2.5 text-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20 sm:rounded-xl sm:px-4 sm:py-3"
+                  className="w-full rounded-xl border border-white/30 bg-background/80 px-3 py-2.5 text-sm outline-none backdrop-blur transition-colors focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 sm:px-4 sm:py-3"
                 />
               </div>
             </div>
@@ -113,19 +114,19 @@ function BookPage() {
                 inputMode="tel"
                 dir="ltr"
                 placeholder="+1 555 123 4567"
-                className="w-full rounded-lg border border-input bg-background px-3 py-2.5 text-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20 sm:rounded-xl sm:px-4 sm:py-3"
+                className="w-full rounded-xl border border-white/30 bg-background/80 px-3 py-2.5 text-sm outline-none backdrop-blur transition-colors focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 sm:px-4 sm:py-3"
               />
             </div>
           </div>
 
           {error && (
-            <p className="mt-3 rounded-lg bg-destructive/10 px-3 py-2 text-xs text-destructive sm:mt-4 sm:text-sm">{error}</p>
+            <p className="mt-3 rounded-lg bg-destructive/15 px-3 py-2 text-xs text-destructive sm:mt-4 sm:text-sm">{error}</p>
           )}
 
           <button
             type="submit"
             disabled={submitting}
-            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-all hover:shadow-[var(--shadow-glow)] disabled:opacity-60 sm:mt-8 sm:rounded-xl sm:py-3"
+            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-lg transition-all hover:shadow-[var(--shadow-glow)] disabled:opacity-60 sm:mt-8"
           >
             {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
             {t.submitLabel}
@@ -133,10 +134,10 @@ function BookPage() {
         </form>
       </main>
       {settings.contact_phone && (
-        <footer className="px-6 pb-8 text-center text-sm text-muted-foreground">
+        <footer className="relative px-6 pb-8 text-center text-sm">
           <a
             href={`tel:${settings.contact_phone}`}
-            className="inline-flex items-center gap-2 rounded-full bg-card/70 px-4 py-2 backdrop-blur"
+            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-card/80 px-4 py-2 text-foreground backdrop-blur-md"
           >
             <Phone className="h-4 w-4" />
             {settings.contact_phone}
