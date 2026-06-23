@@ -34,7 +34,7 @@ function AdminAuthPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-hero px-4 py-8 sm:px-6 sm:py-16">
+    <div className="flex h-[100dvh] items-center justify-center overflow-y-auto bg-hero px-4 py-8 sm:px-6 sm:py-16">
       <div className="glass w-full max-w-md rounded-2xl border border-border p-5 shadow-[var(--shadow-soft)] sm:rounded-3xl sm:p-8">
         <div className="flex items-center gap-2 text-primary">
           <ShieldCheck className="h-5 w-5" />

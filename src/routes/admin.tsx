@@ -40,7 +40,7 @@ function AdminLayout() {
 
   if (loading || !isAdmin) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="flex h-[100dvh] items-center justify-center bg-background">
         <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
       </div>
     );
@@ -66,8 +66,9 @@ function AdminShell({ children, email }: { children: React.ReactNode; email: str
   ];
 
   return (
-    <div className="flex min-h-screen bg-background text-foreground">
+    <div className="flex h-[100dvh] overflow-hidden bg-background text-foreground">
       <aside className="hidden w-64 shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground md:flex">
+
         <div className="px-6 py-6">
           <div className="text-sm font-semibold uppercase tracking-widest text-sidebar-primary">Admin</div>
           <div className="mt-1 text-xs text-muted-foreground">Booking control center</div>
@@ -97,8 +98,8 @@ function AdminShell({ children, email }: { children: React.ReactNode; email: str
         </div>
       </aside>
 
-      <div className="flex flex-1 flex-col">
-        <header className="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-border bg-card/80 px-4 backdrop-blur md:px-8">
+      <div className="flex min-w-0 flex-1 flex-col">
+        <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center justify-between border-b border-border bg-card/80 px-4 backdrop-blur md:px-8">
           <MobileNav nav={nav} />
           <div className="ml-auto flex items-center gap-2">
             <button
@@ -110,7 +111,7 @@ function AdminShell({ children, email }: { children: React.ReactNode; email: str
             </button>
           </div>
         </header>
-        <main className="flex-1 px-4 py-6 md:px-8 md:py-8">{children}</main>
+        <main className="flex-1 overflow-y-auto px-4 py-6 md:px-8 md:py-8">{children}</main>
       </div>
     </div>
   );
