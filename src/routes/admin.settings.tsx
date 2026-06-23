@@ -89,8 +89,15 @@ function SettingsPage() {
           Save changes
         </button>
       </div>
-      {savedAt && (
-        <p className="text-xs text-primary">Saved at {new Date(savedAt).toLocaleTimeString()}</p>
+      {saveError && (
+        <p className="rounded-lg bg-destructive/10 px-3 py-2 text-xs text-destructive">
+          {saveError}
+        </p>
+      )}
+      {savedAt && !saveError && (
+        <p className="text-xs text-primary">
+          Saved at {new Date(savedAt).toLocaleTimeString()} — changes are live across the site.
+        </p>
       )}
 
       <Section title="Contact" desc="Shown on language, booking, and success pages.">
