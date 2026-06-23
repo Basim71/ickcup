@@ -124,18 +124,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      get_public_site_settings: {
-        Args: never
-        Returns: {
-          background_image: string
-          booking_url: string
-          created_at: string
-          id: string
-          texts_ar: Json
-          texts_en: Json
-          updated_at: string
-        }[]
-      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
