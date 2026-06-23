@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Loader2, Save, Upload, Trash2, Phone, Link2, Image as ImageIcon, Languages, Type } from "lucide-react";
+import { Loader2, Save, Upload, Trash2, Phone, Link2, Image as ImageIcon, Type } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteSettings, withDefaults, type SiteSettings, type SiteTexts } from "@/lib/settings";
 import { logAudit } from "@/lib/audit";
