@@ -15,11 +15,14 @@ function SettingsPage() {
   const [draft, setDraft] = useState<SiteSettings>(withDefaults(null));
   const [saving, setSaving] = useState(false);
   const [savedAt, setSavedAt] = useState<number | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
+  // Keep the draft in sync whenever the live record id changes (first load or first insert).
   useEffect(() => setDraft(live), [live.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const save = async () => {
     setSaving(true);
+    setSaveError(null);
     const payload = {
       contact_phone: draft.contact_phone,
       background_image: draft.background_image,
@@ -29,16 +32,30 @@ function SettingsPage() {
       texts_en: draft.texts_en as never,
     };
     let id = draft.id || live.id;
-    if (id) {
-      await supabase.from("settings").update(payload).eq("id", id);
-    } else {
-      const { data } = await supabase.from("settings").insert(payload).select("id").single();
-      id = data?.id ?? "";
+    try {
+      if (id) {
+        const { error } = await supabase.from("settings").update(payload).eq("id", id);
+        if (error) throw error;
+      } else {
+        const { data, error } = await supabase
+          .from("settings")
+          .insert(payload)
+          .select("id")
+          .single();
+        if (error) throw error;
+        id = data?.id ?? "";
+        setDraft((d) => ({ ...d, id }));
+      }
+      await logAudit("update_settings", "settings");
+      setSavedAt(Date.now());
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Failed to save settings";
+      setSaveError(msg);
+    } finally {
+      setSaving(false);
     }
-    await logAudit("update_settings", "settings");
-    setSavedAt(Date.now());
-    setSaving(false);
   };
+
 
   const onImage = async (
     file: File,
