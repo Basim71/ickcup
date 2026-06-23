@@ -60,9 +60,13 @@ export function useSiteSettings() {
   useEffect(() => {
     let mounted = true;
     const fetchSettings = async () => {
+      const { data: authData } = await supabase.auth.getSession();
+      const cols = authData.session
+        ? "*"
+        : "id, background_image, booking_url, texts_ar, texts_en, created_at, updated_at";
       const { data } = await supabase
         .from("settings")
-        .select("*")
+        .select(cols)
         .order("created_at", { ascending: true })
         .limit(1)
         .maybeSingle();
