@@ -276,7 +276,8 @@ function BookingPreview({
   bg,
   title,
   subtitle,
-  fullNameLabel,
+  firstNameLabel,
+  lastNameLabel,
   mobileLabel,
   submitLabel,
   phone,
@@ -284,7 +285,8 @@ function BookingPreview({
   bg: string | null;
   title: string;
   subtitle: string;
-  fullNameLabel: string;
+  firstNameLabel: string;
+  lastNameLabel: string;
   mobileLabel: string;
   submitLabel: string;
   phone: string | null;
@@ -310,9 +312,15 @@ function BookingPreview({
             )}
             {subtitle && <div className="mt-1 text-[11px] text-muted-foreground">{subtitle}</div>}
             <div className="mt-3 space-y-2">
-              <div>
-                <div className="mb-1 text-[10px] font-medium text-foreground">{fullNameLabel}</div>
-                <div className="h-7 rounded-md border border-input bg-background" />
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <div className="mb-1 text-[10px] font-medium text-foreground">{firstNameLabel}</div>
+                  <div className="h-7 rounded-md border border-input bg-background" />
+                </div>
+                <div>
+                  <div className="mb-1 text-[10px] font-medium text-foreground">{lastNameLabel}</div>
+                  <div className="h-7 rounded-md border border-input bg-background" />
+                </div>
               </div>
               <div>
                 <div className="mb-1 text-[10px] font-medium text-foreground">{mobileLabel}</div>
