@@ -5,7 +5,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSiteSettings, withDefaults, type SiteSettings, type SiteTexts } from "@/lib/settings";
 import { logAudit } from "@/lib/audit";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import languageBg from "@/assets/language-bg.jpeg.asset.json";
 
 export const Route = createFileRoute("/admin/settings")({
   component: SettingsPage,
@@ -186,7 +185,9 @@ function SettingsPage() {
                 <div
                   className="overflow-hidden rounded-xl border border-border"
                   style={{
-                    backgroundImage: `url(${draft.language_background || languageBg.url})`,
+                    backgroundImage: draft.language_background
+                      ? `url(${draft.language_background})`
+                      : undefined,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     backgroundColor: "#ffffff",
@@ -346,12 +347,12 @@ function BookingPreview({
   submitLabel: string;
   phone: string | null;
 }) {
-  const image = bg || languageBg.url;
+  const image = bg;
   return (
     <div
       className="relative overflow-hidden rounded-xl border border-border"
       style={{
-        backgroundImage: `url(${image})`,
+        backgroundImage: image ? `url(${image})` : undefined,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundColor: "#ffffff",
