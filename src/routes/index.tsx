@@ -15,11 +15,12 @@ export const Route = createFileRoute("/")({
 
 function LanguagePage() {
   const { settings } = useSiteSettings();
+  const bg = settings.background_image || languageBg.url;
   return (
     <div
       className="relative flex min-h-screen flex-col"
       style={{
-        backgroundImage: `url(${languageBg.url})`,
+        backgroundImage: `url(${bg})`,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
