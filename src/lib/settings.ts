@@ -5,6 +5,8 @@ export type SiteTexts = {
   title?: string;
   subtitle?: string;
   fullNameLabel?: string;
+  firstNameLabel?: string;
+  lastNameLabel?: string;
   mobileLabel?: string;
   submitLabel?: string;
   successTitle?: string;
@@ -26,6 +28,8 @@ const DEFAULT_AR: SiteTexts = {
   title: "",
   subtitle: "نتطلع لاستقبالك. يرجى تعبئة بياناتك أدناه.",
   fullNameLabel: "الاسم الكامل",
+  firstNameLabel: "الاسم",
+  lastNameLabel: "العائلة",
   mobileLabel: "رقم الجوال",
   submitLabel: "تأكيد",
   successTitle: "تم استلام طلبك",
@@ -36,6 +40,8 @@ const DEFAULT_EN: SiteTexts = {
   title: "",
   subtitle: "We look forward to welcoming you. Please fill in your details.",
   fullNameLabel: "Full Name",
+  firstNameLabel: "First Name",
+  lastNameLabel: "Last Name",
   mobileLabel: "Mobile Number",
   submitLabel: "Confirm",
   successTitle: "Request received",
