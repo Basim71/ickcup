@@ -121,38 +121,21 @@ export type Database = {
       }
     }
     Views: {
-      public_site_settings: {
-        Row: {
-          background_image: string | null
-          booking_url: string | null
-          created_at: string | null
-          id: string | null
-          texts_ar: Json | null
-          texts_en: Json | null
-          updated_at: string | null
-        }
-        Insert: {
-          background_image?: string | null
-          booking_url?: string | null
-          created_at?: string | null
-          id?: string | null
-          texts_ar?: Json | null
-          texts_en?: Json | null
-          updated_at?: string | null
-        }
-        Update: {
-          background_image?: string | null
-          booking_url?: string | null
-          created_at?: string | null
-          id?: string | null
-          texts_ar?: Json | null
-          texts_en?: Json | null
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
+      get_public_site_settings: {
+        Args: never
+        Returns: {
+          background_image: string
+          booking_url: string
+          created_at: string
+          id: string
+          texts_ar: Json
+          texts_en: Json
+          updated_at: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
