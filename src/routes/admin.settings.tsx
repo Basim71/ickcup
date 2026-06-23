@@ -126,7 +126,8 @@ function SettingsPage() {
             bg={draft.background_image}
             title={draft.texts_en.title || draft.texts_ar.title || ""}
             subtitle={draft.texts_en.subtitle ?? ""}
-            fullNameLabel={draft.texts_en.fullNameLabel ?? "Full Name"}
+            firstNameLabel={draft.texts_en.firstNameLabel ?? "First Name"}
+            lastNameLabel={draft.texts_en.lastNameLabel ?? "Last Name"}
             mobileLabel={draft.texts_en.mobileLabel ?? "Mobile Number"}
             submitLabel={draft.texts_en.submitLabel ?? "Confirm"}
             phone={draft.contact_phone}
@@ -231,7 +232,8 @@ const TEXT_FIELDS: { key: keyof SiteTexts; label: string }[] = [
   { key: "selectLanguage", label: "Select Language Label" },
   { key: "title", label: "Booking Title" },
   { key: "subtitle", label: "Booking Subtitle" },
-  { key: "fullNameLabel", label: "Full Name Label" },
+  { key: "firstNameLabel", label: "First Name Label" },
+  { key: "lastNameLabel", label: "Last Name Label" },
   { key: "mobileLabel", label: "Mobile Number Label" },
   { key: "submitLabel", label: "Submit Button" },
   { key: "successTitle", label: "Success Title" },
@@ -274,7 +276,8 @@ function BookingPreview({
   bg,
   title,
   subtitle,
-  fullNameLabel,
+  firstNameLabel,
+  lastNameLabel,
   mobileLabel,
   submitLabel,
   phone,
@@ -282,7 +285,8 @@ function BookingPreview({
   bg: string | null;
   title: string;
   subtitle: string;
-  fullNameLabel: string;
+  firstNameLabel: string;
+  lastNameLabel: string;
   mobileLabel: string;
   submitLabel: string;
   phone: string | null;
@@ -308,9 +312,15 @@ function BookingPreview({
             )}
             {subtitle && <div className="mt-1 text-[11px] text-muted-foreground">{subtitle}</div>}
             <div className="mt-3 space-y-2">
-              <div>
-                <div className="mb-1 text-[10px] font-medium text-foreground">{fullNameLabel}</div>
-                <div className="h-7 rounded-md border border-input bg-background" />
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <div className="mb-1 text-[10px] font-medium text-foreground">{firstNameLabel}</div>
+                  <div className="h-7 rounded-md border border-input bg-background" />
+                </div>
+                <div>
+                  <div className="mb-1 text-[10px] font-medium text-foreground">{lastNameLabel}</div>
+                  <div className="h-7 rounded-md border border-input bg-background" />
+                </div>
               </div>
               <div>
                 <div className="mb-1 text-[10px] font-medium text-foreground">{mobileLabel}</div>

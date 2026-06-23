@@ -17,7 +17,8 @@ export const Route = createFileRoute("/book")({
 });
 
 const bookingSchema = z.object({
-  full_name: z.string().trim().min(1).max(120),
+  first_name: z.string().trim().min(1, "First name is required").max(60),
+  last_name: z.string().trim().min(1, "Last name is required").max(60),
   mobile_number: z
     .string()
     .trim()
@@ -40,7 +41,8 @@ function BookPage() {
     setError(null);
     const form = new FormData(e.currentTarget);
     const parsed = bookingSchema.safeParse({
-      full_name: form.get("full_name"),
+      first_name: form.get("first_name"),
+      last_name: form.get("last_name"),
       mobile_number: form.get("mobile_number"),
     });
     if (!parsed.success) {
@@ -48,7 +50,10 @@ function BookPage() {
       return;
     }
     setSubmitting(true);
-    const { error: err } = await supabase.from("bookings").insert({ ...parsed.data, language: lang });
+    const full_name = `${parsed.data.first_name} ${parsed.data.last_name}`.trim();
+    const { error: err } = await supabase
+      .from("bookings")
+      .insert({ full_name, mobile_number: parsed.data.mobile_number, language: lang });
     setSubmitting(false);
     if (err) {
       setError(err.message);
@@ -79,14 +84,25 @@ function BookPage() {
           <p className={`text-xs text-muted-foreground sm:text-sm ${t.title ? "mt-1 sm:mt-2" : ""}`}>{t.subtitle}</p>
 
           <div className="mt-5 space-y-3 sm:mt-8 sm:space-y-5">
-            <div>
-              <label className="mb-1 block text-xs font-medium sm:mb-1.5 sm:text-sm">{t.fullNameLabel}</label>
-              <input
-                name="full_name"
-                required
-                maxLength={120}
-                className="w-full rounded-lg border border-input bg-background px-3 py-2.5 text-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20 sm:rounded-xl sm:px-4 sm:py-3"
-              />
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
+              <div>
+                <label className="mb-1 block text-xs font-medium sm:mb-1.5 sm:text-sm">{t.firstNameLabel}</label>
+                <input
+                  name="first_name"
+                  required
+                  maxLength={60}
+                  className="w-full rounded-lg border border-input bg-background px-3 py-2.5 text-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20 sm:rounded-xl sm:px-4 sm:py-3"
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-xs font-medium sm:mb-1.5 sm:text-sm">{t.lastNameLabel}</label>
+                <input
+                  name="last_name"
+                  required
+                  maxLength={60}
+                  className="w-full rounded-lg border border-input bg-background px-3 py-2.5 text-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20 sm:rounded-xl sm:px-4 sm:py-3"
+                />
+              </div>
             </div>
             <div>
               <label className="mb-1 block text-xs font-medium sm:mb-1.5 sm:text-sm">{t.mobileLabel}</label>
