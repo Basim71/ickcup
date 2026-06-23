@@ -126,7 +126,8 @@ function SettingsPage() {
             bg={draft.background_image}
             title={draft.texts_en.title || draft.texts_ar.title || ""}
             subtitle={draft.texts_en.subtitle ?? ""}
-            fullNameLabel={draft.texts_en.fullNameLabel ?? "Full Name"}
+            firstNameLabel={draft.texts_en.firstNameLabel ?? "First Name"}
+            lastNameLabel={draft.texts_en.lastNameLabel ?? "Last Name"}
             mobileLabel={draft.texts_en.mobileLabel ?? "Mobile Number"}
             submitLabel={draft.texts_en.submitLabel ?? "Confirm"}
             phone={draft.contact_phone}
