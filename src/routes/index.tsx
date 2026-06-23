@@ -15,7 +15,7 @@ export const Route = createFileRoute("/")({
 
 function LanguagePage() {
   const { settings } = useSiteSettings();
-  const bg = settings.background_image || languageBg.url;
+  const bg = settings.language_background || languageBg.url;
   return (
     <div
       className="relative flex min-h-screen flex-col"
