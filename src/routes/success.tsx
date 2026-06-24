@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { z } from "zod";
 import { Check, Phone } from "lucide-react";
-import { useSiteSettings } from "@/lib/settings";
+import { useSiteSettings, withCacheBust } from "@/lib/settings";
 
 export const Route = createFileRoute("/success")({
   validateSearch: z.object({ lang: z.enum(["ar", "en"]).catch("en") }),
