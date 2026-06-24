@@ -66,6 +66,7 @@ export function withDefaults(s: SiteSettings | null): SiteSettings {
     booking_url: s?.booking_url ?? null,
     texts_ar: { ...DEFAULT_AR, ...(s?.texts_ar ?? {}) },
     texts_en: { ...DEFAULT_EN, ...(s?.texts_en ?? {}) },
+    updated_at: s?.updated_at ?? null,
   };
 }
 
