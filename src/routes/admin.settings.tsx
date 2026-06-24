@@ -186,7 +186,7 @@ function SettingsPage() {
                   className="overflow-hidden rounded-xl border border-border"
                   style={{
                     backgroundImage: draft.language_background
-                      ? `url(${draft.language_background})`
+                      ? `url(${withCacheBust(draft.language_background, draft.updated_at)})`
                       : undefined,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
