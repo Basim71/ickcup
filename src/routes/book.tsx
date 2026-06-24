@@ -3,7 +3,7 @@ import { useState } from "react";
 import { z } from "zod";
 import { Phone, Loader2, ChevronLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { useSiteSettings } from "@/lib/settings";
+import { useSiteSettings, withCacheBust } from "@/lib/settings";
 
 const searchSchema = z.object({ lang: z.enum(["ar", "en"]).catch("en") });
 
