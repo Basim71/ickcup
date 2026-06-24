@@ -15,9 +15,21 @@ function SuccessPage() {
   const t = lang === "ar" ? settings.texts_ar : settings.texts_en;
   const dir = lang === "ar" ? "rtl" : "ltr";
 
+  const bg = settings.background_image;
+
   return (
-    <div dir={dir} className="font-public flex min-h-[100dvh] flex-col bg-neutral-50">
-      <main className="flex flex-1 flex-col items-center justify-center px-5 py-12 sm:py-16">
+    <div
+      dir={dir}
+      className="font-public relative flex min-h-[100dvh] flex-col bg-neutral-50"
+      style={{
+        backgroundImage: bg ? `url(${bg})` : undefined,
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+      }}
+    >
+      {bg && <div className="absolute inset-0 bg-black/15" />}
+      <main className="relative flex flex-1 flex-col items-center justify-center px-5 py-12 sm:py-16">
         <div className="w-full max-w-md rounded-[22px] border border-black/5 bg-white p-8 text-center shadow-[0_24px_70px_-32px_rgba(20,20,30,0.45)] sm:p-10">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-neutral-900">
             <Check className="h-7 w-7 text-white" strokeWidth={2.5} />
