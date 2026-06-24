@@ -64,7 +64,7 @@ function BookPage() {
     navigate({ to: "/success", search: { lang } });
   };
 
-  const bg = settings.background_image;
+  const bg = withCacheBust(settings.background_image, settings.updated_at);
 
   return (
     <div
