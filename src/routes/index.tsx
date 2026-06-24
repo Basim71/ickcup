@@ -31,7 +31,7 @@ function LanguagePage() {
         <div className="glass-strong mx-auto w-full max-w-xl rounded-3xl border border-white/20 p-6 shadow-2xl sm:p-10">
           <div className="mb-4 flex justify-center sm:mb-8">
             <span className="inline-flex items-center gap-2 rounded-full bg-primary/15 px-3 py-1 text-[10px] font-medium uppercase tracking-widest text-primary sm:px-4 sm:py-1.5 sm:text-xs">
-              <Sparkles className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> Welcome
+              <Sparkles className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
             </span>
           </div>
           <h1 className="text-center text-xl font-semibold tracking-tight text-foreground sm:text-4xl">
@@ -60,15 +60,7 @@ function LanguagePage() {
           </div>
         </div>
       </main>
-      {settings.contact_phone && (
-        <footer className="relative px-6 pb-8 text-center text-sm">
-          <a
-            href={`tel:${settings.contact_phone}`}
-            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-card/80 px-4 py-2 text-foreground backdrop-blur-md"
-          >
-            <Phone className="h-4 w-4" />
-            {settings.contact_phone}
-          </a>
+     
         </footer>
       )}
     </div>
