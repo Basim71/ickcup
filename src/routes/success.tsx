@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { z } from "zod";
 import { Check, Phone } from "lucide-react";
-import { useSiteSettings } from "@/lib/settings";
+import { useSiteSettings, withCacheBust } from "@/lib/settings";
 
 export const Route = createFileRoute("/success")({
   validateSearch: z.object({ lang: z.enum(["ar", "en"]).catch("en") }),
@@ -15,7 +15,7 @@ function SuccessPage() {
   const t = lang === "ar" ? settings.texts_ar : settings.texts_en;
   const dir = lang === "ar" ? "rtl" : "ltr";
 
-  const bg = settings.background_image;
+  const bg = withCacheBust(settings.background_image, settings.updated_at);
 
   return (
     <div

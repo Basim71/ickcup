@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Loader2, Save, Upload, Trash2, Phone, Link2, Image as ImageIcon, Type } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { useSiteSettings, withDefaults, type SiteSettings, type SiteTexts } from "@/lib/settings";
+import { useSiteSettings, withDefaults, withCacheBust, type SiteSettings, type SiteTexts } from "@/lib/settings";
 import { logAudit } from "@/lib/audit";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
@@ -162,7 +162,7 @@ function SettingsPage() {
               <div className="mt-4">
                 <p className="mb-2 text-xs font-medium text-muted-foreground">Live preview</p>
                 <BookingPreview
-                  bg={draft.background_image}
+                  bg={withCacheBust(draft.background_image, draft.updated_at)}
                   title={draft.texts_en.title || draft.texts_ar.title || ""}
                   subtitle={draft.texts_en.subtitle ?? ""}
                   firstNameLabel={draft.texts_en.firstNameLabel ?? "First Name"}
@@ -186,7 +186,7 @@ function SettingsPage() {
                   className="overflow-hidden rounded-xl border border-border"
                   style={{
                     backgroundImage: draft.language_background
-                      ? `url(${draft.language_background})`
+                      ? `url(${withCacheBust(draft.language_background, draft.updated_at)})`
                       : undefined,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
