@@ -32,7 +32,6 @@ function LanguagePage() {
       <main className="relative flex flex-1 flex-col items-center justify-center px-5 pb-12 pt-[13vh] sm:px-6 sm:py-16">
         <div className="w-full max-w-md rounded-[22px] border border-black/5 bg-white p-6 shadow-[0_24px_70px_-32px_rgba(20,20,30,0.45)] sm:p-8">
           <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-neutral-400">
-            Welcome · أهلاً بك
           </p>
 
           <h1 className="mt-3 text-[21px] font-semibold leading-tight tracking-tight text-neutral-900 sm:text-[25px]">
