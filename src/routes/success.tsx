@@ -15,7 +15,7 @@ function SuccessPage() {
   const t = lang === "ar" ? settings.texts_ar : settings.texts_en;
   const dir = lang === "ar" ? "rtl" : "ltr";
 
-  const bg = settings.background_image;
+  const bg = withCacheBust(settings.background_image, settings.updated_at);
 
   return (
     <div
