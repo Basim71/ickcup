@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useSiteSettings } from "@/lib/settings";
+import { useSiteSettings, withCacheBust } from "@/lib/settings";
 
 export const Route = createFileRoute("/")({
   head: () => ({
