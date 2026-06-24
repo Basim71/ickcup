@@ -1,141 +1,103 @@
-import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
-import { useEffect } from "react";
-import {
-  LayoutDashboard,
-  QrCode,
-  Settings as SettingsIcon,
-  CalendarDays,
-  Moon,
-  Sun,
-  LogOut,
-  Loader2,
-} from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { CalendarDays, QrCode, Settings as SettingsIcon, ArrowUpRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { useAdminAuth } from "@/hooks/use-admin-auth";
-import { ThemeProvider, useTheme } from "@/components/theme-provider";
 
-export const Route = createFileRoute("/admin")({
-  ssr: false,
-  head: () => ({ meta: [{ title: "Admin Dashboard" }, { name: "robots", content: "noindex" }] }),
-  component: () => (
-    <ThemeProvider scope="admin">
-      <AdminLayout />
-    </ThemeProvider>
-  ),
+export const Route = createFileRoute("/admin/")({
+  component: AdminDashboard,
 });
 
-function AdminLayout() {
-  const { loading, isAdmin, email } = useAdminAuth();
-  const navigate = useNavigate();
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const isAuthPage = pathname === "/admin/auth";
+type Stats = { total: number; today: number; week: number; arabic: number; english: number };
+
+function AdminDashboard() {
+  const [stats, setStats] = useState<Stats | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (loading) return;
-    if (!isAdmin && !isAuthPage) navigate({ to: "/admin/auth" });
-    if (isAdmin && isAuthPage) navigate({ to: "/admin" });
-  }, [loading, isAdmin, isAuthPage, navigate]);
-
-  if (isAuthPage) return <Outlet />;
-
-  if (loading || !isAdmin) {
-    return (
-      <div className="flex h-[100dvh] items-center justify-center bg-background">
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-      </div>
-    );
-  }
-
-  return <AdminShell email={email}><Outlet /></AdminShell>;
-}
-
-function AdminShell({ children, email }: { children: React.ReactNode; email: string | null }) {
-  const { theme, toggle } = useTheme();
-  const navigate = useNavigate();
-
-  const signOut = async () => {
-    await supabase.auth.signOut();
-    navigate({ to: "/admin/auth" });
-  };
-
-  const nav: { to: string; label: string; icon: React.ComponentType<{ className?: string }>; exact?: boolean }[] = [
-    { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
-    { to: "/admin/bookings", label: "Bookings", icon: CalendarDays },
-    { to: "/admin/qr", label: "QR Code", icon: QrCode },
-    { to: "/admin/settings", label: "Settings", icon: SettingsIcon },
-  ];
+    (async () => {
+      const { data, error: err } = await supabase
+        .from("bookings")
+        .select("language, created_at");
+      if (err) {
+        setError(err.message);
+        return;
+      }
+      const rows = data ?? [];
+      const now = Date.now();
+      const dayMs = 86_400_000;
+      setStats({
+        total: rows.length,
+        today: rows.filter((r) => now - new Date(r.created_at as string).getTime() < dayMs).length,
+        week: rows.filter((r) => now - new Date(r.created_at as string).getTime() < 7 * dayMs).length,
+        arabic: rows.filter((r) => r.language === "ar").length,
+        english: rows.filter((r) => r.language === "en").length,
+      });
+    })();
+  }, []);
 
   return (
-    <div className="flex h-[100dvh] overflow-hidden bg-background text-foreground">
-      <aside className="hidden w-64 shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground md:flex">
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
+        <p className="mt-1 text-sm text-muted-foreground">Overview of bookings and quick actions.</p>
+      </div>
 
-        <div className="px-6 py-6">
-          <div className="text-sm font-semibold uppercase tracking-widest text-sidebar-primary">Admin</div>
-          <div className="mt-1 text-xs text-muted-foreground">Booking control center</div>
-        </div>
-        <nav className="flex-1 space-y-1 px-3">
-          {nav.map((n) => (
-            <Link
-              key={n.to}
-              to={n.to}
-              activeOptions={{ exact: n.exact }}
-              activeProps={{ className: "bg-sidebar-accent text-sidebar-accent-foreground" }}
-              className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors hover:bg-sidebar-accent/60"
-            >
-              <n.icon className="h-4 w-4" />
-              {n.label}
-            </Link>
-          ))}
-        </nav>
-        <div className="border-t border-sidebar-border p-3">
-          <div className="px-3 py-2 text-xs text-muted-foreground">{email}</div>
-          <button
-            onClick={signOut}
-            className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-sidebar-accent"
-          >
-            <LogOut className="h-4 w-4" /> Sign out
-          </button>
-        </div>
-      </aside>
+      {error && (
+        <p className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">
+          Couldn't load stats: {error}
+        </p>
+      )}
 
-      <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center justify-between border-b border-border bg-card/80 px-4 backdrop-blur md:px-8">
-          <MobileNav nav={nav} />
-          <div className="ml-auto flex items-center gap-2">
-            <button
-              onClick={toggle}
-              aria-label="Toggle theme"
-              className="rounded-lg border border-border bg-background p-2 transition-colors hover:bg-accent"
-            >
-              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            </button>
-          </div>
-        </header>
-        <main className="flex-1 overflow-y-auto px-4 py-6 md:px-8 md:py-8">{children}</main>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <Metric label="Total bookings" value={stats ? stats.total : "—"} />
+        <Metric label="Today" value={stats ? stats.today : "—"} />
+        <Metric label="This week" value={stats ? stats.week : "—"} />
+        <Metric label="Arabic / English" value={stats ? `${stats.arabic} / ${stats.english}` : "—"} />
+      </div>
+
+      <div>
+        <h2 className="mb-3 text-sm font-medium text-muted-foreground">Quick actions</h2>
+        <div className="grid gap-3 md:grid-cols-3">
+          <QuickLink to="/admin/bookings" icon={CalendarDays} title="Bookings" desc="View, export, manage" />
+          <QuickLink to="/admin/qr" icon={QrCode} title="QR code" desc="Generate & download" />
+          <QuickLink to="/admin/settings" icon={SettingsIcon} title="Settings" desc="Site & contact" />
+        </div>
       </div>
     </div>
   );
 }
 
-function MobileNav({
-  nav,
+function Metric({ label, value }: { label: string; value: number | string }) {
+  return (
+    <div className="rounded-xl bg-secondary px-4 py-4">
+      <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{label}</div>
+      <div className="mt-2 text-3xl font-semibold tracking-tight">{value}</div>
+    </div>
+  );
+}
+
+function QuickLink({
+  to,
+  icon: Icon,
+  title,
+  desc,
 }: {
-  nav: readonly { to: string; label: string; icon: React.ComponentType<{ className?: string }>; exact?: boolean }[];
+  to: "/admin/bookings" | "/admin/qr" | "/admin/settings";
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  desc: string;
 }) {
   return (
-    <nav className="flex gap-1 overflow-x-auto md:hidden">
-      {nav.map((n) => (
-        <Link
-          key={n.to}
-          to={n.to}
-          activeOptions={{ exact: n.exact }}
-          activeProps={{ className: "bg-accent text-accent-foreground" }}
-          className="flex items-center gap-2 whitespace-nowrap rounded-lg px-3 py-1.5 text-xs"
-        >
-          <n.icon className="h-3.5 w-3.5" />
-          {n.label}
-        </Link>
-      ))}
-    </nav>
+    <Link
+      to={to}
+      className="group flex items-start justify-between rounded-xl border border-border bg-card p-5 transition-colors hover:bg-accent"
+    >
+      <div>
+        <Icon className="h-5 w-5 text-foreground" />
+        <div className="mt-3 font-medium">{title}</div>
+        <div className="text-sm text-muted-foreground">{desc}</div>
+      </div>
+      <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+    </Link>
   );
 }
