@@ -1,103 +1,71 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { CalendarDays, QrCode, Settings as SettingsIcon, ArrowUpRight } from "lucide-react";
+import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
+import { LayoutDashboard, CalendarDays, QrCode, Settings as SettingsIcon, LogOut } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin")({
-  component: AdminDashboard,
+  component: AdminLayout,
 });
 
-type Stats = { total: number; today: number; week: number; arabic: number; english: number };
+const NAV = [
+  { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { to: "/admin/bookings", label: "Bookings", icon: CalendarDays },
+  { to: "/admin/qr", label: "QR Code", icon: QrCode },
+  { to: "/admin/settings", label: "Settings", icon: SettingsIcon },
+] as const;
 
-function AdminDashboard() {
-  const [stats, setStats] = useState<Stats | null>(null);
-  const [error, setError] = useState<string | null>(null);
+function AdminLayout() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isAuthPage = pathname === "/admin/auth";
 
-  useEffect(() => {
-    (async () => {
-      const { data, error: err } = await supabase
-        .from("bookings")
-        .select("language, created_at");
-      if (err) {
-        setError(err.message);
-        return;
-      }
-      const rows = data ?? [];
-      const now = Date.now();
-      const dayMs = 86_400_000;
-      setStats({
-        total: rows.length,
-        today: rows.filter((r) => now - new Date(r.created_at as string).getTime() < dayMs).length,
-        week: rows.filter((r) => now - new Date(r.created_at as string).getTime() < 7 * dayMs).length,
-        arabic: rows.filter((r) => r.language === "ar").length,
-        english: rows.filter((r) => r.language === "en").length,
-      });
-    })();
-  }, []);
+  if (isAuthPage) {
+    return <Outlet />;
+  }
+
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    window.location.href = "/admin/auth";
+  };
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Overview of bookings and quick actions.</p>
-      </div>
-
-      {error && (
-        <p className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">
-          Couldn't load stats: {error}
-        </p>
-      )}
-
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <Metric label="Total bookings" value={stats ? stats.total : "—"} />
-        <Metric label="Today" value={stats ? stats.today : "—"} />
-        <Metric label="This week" value={stats ? stats.week : "—"} />
-        <Metric label="Arabic / English" value={stats ? `${stats.arabic} / ${stats.english}` : "—"} />
-      </div>
-
-      <div>
-        <h2 className="mb-3 text-sm font-medium text-muted-foreground">Quick actions</h2>
-        <div className="grid gap-3 md:grid-cols-3">
-          <QuickLink to="/admin/bookings" icon={CalendarDays} title="Bookings" desc="View, export, manage" />
-          <QuickLink to="/admin/qr" icon={QrCode} title="QR code" desc="Generate & download" />
-          <QuickLink to="/admin/settings" icon={SettingsIcon} title="Settings" desc="Site & contact" />
+    <div className="min-h-screen bg-background">
+      <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
+          <Link to="/admin" className="text-sm font-semibold tracking-tight">
+            Admin
+          </Link>
+          <nav className="flex items-center gap-1 overflow-x-auto">
+            {NAV.map((item) => {
+              const active = item.exact ? pathname === item.to : pathname.startsWith(item.to);
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-1.5 text-sm transition-colors ${
+                    active
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                  }`}
+                >
+                  <Icon className="h-4 w-4" />
+                  <span className="hidden sm:inline">{item.label}</span>
+                </Link>
+              );
+            })}
+            <button
+              onClick={signOut}
+              className="ml-1 inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              title="Sign out"
+            >
+              <LogOut className="h-4 w-4" />
+              <span className="hidden sm:inline">Sign out</span>
+            </button>
+          </nav>
         </div>
-      </div>
+      </header>
+      <main className="mx-auto max-w-6xl px-4 py-6">
+        <Outlet />
+      </main>
     </div>
-  );
-}
-
-function Metric({ label, value }: { label: string; value: number | string }) {
-  return (
-    <div className="rounded-xl bg-secondary px-4 py-4">
-      <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{label}</div>
-      <div className="mt-2 text-3xl font-semibold tracking-tight">{value}</div>
-    </div>
-  );
-}
-
-function QuickLink({
-  to,
-  icon: Icon,
-  title,
-  desc,
-}: {
-  to: "/admin/bookings" | "/admin/qr" | "/admin/settings";
-  icon: React.ComponentType<{ className?: string }>;
-  title: string;
-  desc: string;
-}) {
-  return (
-    <Link
-      to={to}
-      className="group flex items-start justify-between rounded-xl border border-border bg-card p-5 transition-colors hover:bg-accent"
-    >
-      <div>
-        <Icon className="h-5 w-5 text-foreground" />
-        <div className="mt-3 font-medium">{title}</div>
-        <div className="text-sm text-muted-foreground">{desc}</div>
-      </div>
-      <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-    </Link>
   );
 }
