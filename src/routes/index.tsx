@@ -1,5 +1,4 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Phone } from "lucide-react";
 import { useSiteSettings } from "@/lib/settings";
 
 export const Route = createFileRoute("/")({
@@ -73,7 +72,6 @@ function LanguagePage() {
             </Link>
           </div>
         </div>
-        )}
       </main>
     </div>
   );
