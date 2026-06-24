@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { z } from "zod";
-import { CheckCircle2, Phone } from "lucide-react";
+import { Check, Phone } from "lucide-react";
 import { useSiteSettings } from "@/lib/settings";
 
 export const Route = createFileRoute("/success")({
@@ -16,27 +16,35 @@ function SuccessPage() {
   const dir = lang === "ar" ? "rtl" : "ltr";
 
   return (
-    <div className="flex min-h-screen flex-col bg-hero" dir={dir}>
-      <main className="flex flex-1 items-center justify-center px-6 py-16">
-        <div className="glass w-full max-w-lg rounded-3xl border border-border p-10 text-center shadow-[var(--shadow-soft)]">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/15 text-primary">
-            <CheckCircle2 className="h-8 w-8" />
+    <div dir={dir} className="font-public flex min-h-[100dvh] flex-col bg-neutral-50">
+      <main className="flex flex-1 flex-col items-center justify-center px-5 py-12 sm:py-16">
+        <div className="w-full max-w-md rounded-[22px] border border-black/5 bg-white p-8 text-center shadow-[0_24px_70px_-32px_rgba(20,20,30,0.45)] sm:p-10">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-neutral-900">
+            <Check className="h-7 w-7 text-white" strokeWidth={2.5} />
           </div>
-          <h1 className="mt-6 text-3xl font-semibold tracking-tight">{t.successTitle}</h1>
-          <p className="mt-3 text-muted-foreground">{t.successMessage}</p>
+
+          <h1 className="mt-6 text-[24px] font-semibold tracking-tight text-neutral-900">
+            {t.successTitle}
+          </h1>
+          <p className="mx-auto mt-2 max-w-xs text-[15px] leading-relaxed text-neutral-500">
+            {t.successMessage}
+          </p>
 
           {settings.contact_phone && (
             <a
               href={`tel:${settings.contact_phone}`}
-              className="mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground"
+              className="mt-7 inline-flex items-center justify-center gap-2 rounded-xl bg-neutral-900 px-5 py-2.5 text-[14px] font-semibold text-white transition-colors hover:bg-neutral-800"
             >
               <Phone className="h-4 w-4" />
-              {settings.contact_phone}
+              <span dir="ltr">{settings.contact_phone}</span>
             </a>
           )}
 
-          <div className="mt-8">
-            <Link to="/" className="text-sm text-muted-foreground underline-offset-4 hover:underline">
+          <div className="mt-7 border-t border-neutral-100 pt-5">
+            <Link
+              to="/"
+              className="text-[13px] text-neutral-400 underline-offset-4 transition-colors hover:text-neutral-700 hover:underline"
+            >
               {lang === "ar" ? "العودة للرئيسية" : "Back to home"}
             </Link>
           </div>
