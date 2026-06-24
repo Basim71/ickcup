@@ -16,13 +16,21 @@ function QrPage() {
   const [pngUrl, setPngUrl] = useState<string | null>(null);
   const [svgMarkup, setSvgMarkup] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [urlInput, setUrlInput] = useState("");
+  const [saveError, setSaveError] = useState<string | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const defaultUrl = useMemo(
     () => (typeof window !== "undefined" ? window.location.origin + "/" : ""),
     [],
   );
-  const url = settings.booking_url || defaultUrl;
+
+  // Mirror the stored URL into a local field; persist only on blur, not per keystroke.
+  useEffect(() => {
+    setUrlInput(settings.booking_url ?? "");
+  }, [settings.booking_url]);
+
+  const url = urlInput.trim() || defaultUrl;
 
   const regenerate = async (target: string) => {
     if (!target) return;
@@ -39,14 +47,34 @@ function QrPage() {
     regenerate(url);
   }, [url]);
 
-  const persistBookingUrl = async (newUrl: string) => {
-    const { data: existing } = await supabase.from("settings").select("id").limit(1).maybeSingle();
-    if (existing?.id) {
-      await supabase.from("settings").update({ booking_url: newUrl }).eq("id", existing.id);
-    } else {
-      await supabase.from("settings").insert({ booking_url: newUrl });
+  const saveBookingUrl = async () => {
+    const trimmed = urlInput.trim();
+    if (trimmed === (settings.booking_url ?? "")) return; // nothing changed
+    setSaveError(null);
+    try {
+      const { data: existing } = await supabase
+        .from("settings")
+        .select("id")
+        .order("created_at", { ascending: true })
+        .limit(1)
+        .maybeSingle();
+      if (existing?.id) {
+        const { error } = await supabase
+          .from("settings")
+          .update({ booking_url: trimmed || null })
+          .eq("id", existing.id)
+          .select("id");
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from("settings")
+          .insert({ booking_url: trimmed || null });
+        if (error) throw error;
+      }
+      await logAudit("update_booking_url", "settings", { booking_url: trimmed });
+    } catch (e) {
+      setSaveError(e instanceof Error ? e.message : "Failed to save URL");
     }
-    await logAudit("update_booking_url", "settings", { booking_url: newUrl });
   };
 
   const downloadPng = () => {
@@ -95,9 +123,13 @@ function QrPage() {
             </p>
             <div className="mt-4 flex flex-col gap-2 sm:flex-row">
               <input
-                value={settings.booking_url ?? ""}
+                value={urlInput}
                 placeholder={defaultUrl}
-                onChange={(e) => persistBookingUrl(e.target.value)}
+                onChange={(e) => setUrlInput(e.target.value)}
+                onBlur={saveBookingUrl}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+                }}
                 className="flex-1 rounded-xl border border-input bg-background px-4 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
               />
               <button
@@ -117,6 +149,11 @@ function QrPage() {
             <p className="mt-3 break-all rounded-lg bg-muted px-3 py-2 text-xs text-muted-foreground">
               {url}
             </p>
+            {saveError && (
+              <p className="mt-2 rounded-lg bg-destructive/10 px-3 py-2 text-xs text-destructive">
+                {saveError}
+              </p>
+            )}
           </div>
 
           <div className="rounded-2xl border border-border bg-card p-6">
