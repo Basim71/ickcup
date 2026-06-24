@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap");
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
@@ -118,6 +119,9 @@
 }
 
 @layer utilities {
+  .font-public {
+    font-family: "IBM Plex Sans Arabic", "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  }
   .bg-hero {
     background-image: radial-gradient(circle at 20% 20%, oklch(0.75 0.12 255 / 0.35), transparent 50%),
                       radial-gradient(circle at 80% 80%, oklch(0.7 0.15 320 / 0.3), transparent 55%),
