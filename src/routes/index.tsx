@@ -29,7 +29,7 @@ function LanguagePage() {
     >
       {bg && <div className="absolute inset-0 bg-black/15" />}
 
-      <main className="relative flex flex-1 flex-col items-center justify-center px-5 pb-12 pt-[20vh] sm:px-6 sm:py-16">
+      <main className="relative flex flex-1 flex-col items-center justify-center px-5 pb-12 pt-[25vh] sm:px-6 sm:py-16">
         <div className="w-full max-w-md rounded-[22px] border border-black/5 bg-white p-6 shadow-[0_24px_70px_-32px_rgba(20,20,30,0.45)] sm:p-8">
           <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-neutral-400">
           </p>
