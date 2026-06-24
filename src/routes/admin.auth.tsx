@@ -1,7 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Loader2, ShieldCheck } from "lucide-react";
+import { Loader2, ShieldCheck, LogOut } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAdminAuth } from "@/hooks/use-admin-auth";
 
 export const Route = createFileRoute("/admin/auth")({
   component: AdminAuthPage,
@@ -9,16 +10,18 @@ export const Route = createFileRoute("/admin/auth")({
 
 function AdminAuthPage() {
   const navigate = useNavigate();
+  const { loading, userId, isAdmin } = useAdminAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Only an actual admin is sent into the dashboard. A signed-in non-admin
+  // stays here and sees the message below — this prevents the /admin <-> /admin/auth
+  // redirect loop that happened when any session triggered a redirect to /admin.
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: "/admin" });
-    });
-  }, [navigate]);
+    if (!loading && isAdmin) navigate({ to: "/admin" });
+  }, [loading, isAdmin, navigate]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,8 +33,41 @@ function AdminAuthPage() {
       setError(err.message);
       return;
     }
-    navigate({ to: "/admin" });
+    // Role resolves via useAdminAuth; the effect above redirects admins.
   };
+
+  const signOut = async () => {
+    await supabase.auth.signOut();
+  };
+
+  if (loading) {
+    return (
+      <div className="flex h-[100dvh] items-center justify-center bg-hero">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  // Signed in but NOT an admin: clear message instead of bouncing between routes.
+  if (userId && !isAdmin) {
+    return (
+      <div className="flex h-[100dvh] items-center justify-center bg-hero px-4">
+        <div className="glass w-full max-w-md rounded-3xl border border-border p-8 text-center shadow-[var(--shadow-soft)]">
+          <ShieldCheck className="mx-auto h-6 w-6 text-primary" />
+          <h1 className="mt-3 text-xl font-semibold tracking-tight">Not authorized</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            This account is signed in but doesn't have admin access.
+          </p>
+          <button
+            onClick={signOut}
+            className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-background px-4 py-2.5 text-sm transition-colors hover:bg-accent"
+          >
+            <LogOut className="h-4 w-4" /> Sign out
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-[100dvh] items-center justify-center overflow-y-auto bg-hero px-4 py-8 sm:px-6 sm:py-16">
