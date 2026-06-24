@@ -73,6 +73,15 @@ function LanguagePage() {
             </Link>
           </div>
         </div>
+
+        {settings.contact_phone && (
+          <a
+            href={`tel:${settings.contact_phone}`}
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-[13px] text-neutral-600 shadow-sm backdrop-blur transition-colors hover:text-neutral-900"
+          >
+            <Phone className="h-3.5 w-3.5" />
+            <span dir="ltr">{settings.contact_phone}</span>
+          </a>
         )}
       </main>
     </div>
