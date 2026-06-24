@@ -1,12 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Phone, Sparkles } from "lucide-react";
+import { Phone } from "lucide-react";
 import { useSiteSettings } from "@/lib/settings";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Choose your language" },
-      { name: "description", content: "Select your preferred language to book an appointment." },
+      { name: "description", content: "Select your preferred language to continue your booking." },
     ],
   }),
   component: LanguagePage,
@@ -15,9 +15,11 @@ export const Route = createFileRoute("/")({
 function LanguagePage() {
   const { settings } = useSiteSettings();
   const bg = settings.language_background;
+
   return (
     <div
-      className="relative flex min-h-[100dvh] flex-col"
+      dir="ltr"
+      className="font-public relative flex min-h-[100dvh] flex-col"
       style={{
         backgroundImage: bg ? `url(${bg})` : undefined,
         backgroundSize: "cover",
@@ -26,43 +28,62 @@ function LanguagePage() {
         backgroundColor: "#ffffff",
       }}
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/50" />
-      <main className="relative flex flex-1 flex-col items-center justify-center px-4 pb-10 pt-[22vh] sm:px-6 sm:py-16">
-        <div className="glass-strong mx-auto w-full max-w-xl rounded-3xl border border-white/20 p-6 shadow-2xl sm:p-10">
-          <div className="mb-4 flex justify-center sm:mb-8">
-            <span className="inline-flex items-center gap-2 rounded-full bg-primary/15 px-3 py-1 text-[10px] font-medium uppercase tracking-widest text-primary sm:px-4 sm:py-1.5 sm:text-xs">
-              <Sparkles className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-            </span>
-          </div>
-          <h1 className="text-center text-xl font-semibold tracking-tight text-foreground sm:text-4xl">
-            {settings.texts_en.selectLanguage} / {settings.texts_ar.selectLanguage}
-          </h1>
-          <p className="mt-2 text-center text-xs text-muted-foreground sm:mt-3 sm:text-sm">
-            Please choose your preferred language to continue.
+      {bg && <div className="absolute inset-0 bg-black/15" />}
+
+      <main className="relative flex flex-1 flex-col items-center justify-center px-5 pb-12 pt-[13vh] sm:px-6 sm:py-16">
+        <div className="w-full max-w-md rounded-[22px] border border-black/5 bg-white p-6 shadow-[0_24px_70px_-32px_rgba(20,20,30,0.45)] sm:p-8">
+          <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-neutral-400">
+            Welcome · أهلاً بك
           </p>
-          <div className="mt-5 grid grid-cols-2 gap-3 sm:mt-10 sm:gap-4">
+
+          <h1 className="mt-3 text-[21px] font-semibold leading-tight tracking-tight text-neutral-900 sm:text-[25px]">
+            {settings.texts_en.selectLanguage}
+          </h1>
+          <p dir="rtl" className="mt-1 text-[14px] text-neutral-500">
+            {settings.texts_ar.selectLanguage}
+          </p>
+
+          <div className="mt-7 grid grid-cols-2 overflow-hidden rounded-2xl border border-neutral-200">
             <Link
               to="/book"
               search={{ lang: "ar" }}
-              className="group relative overflow-hidden rounded-2xl border border-white/30 bg-card/70 p-4 text-center backdrop-blur-md transition-all hover:-translate-y-0.5 hover:border-primary hover:bg-card/90 hover:shadow-[var(--shadow-glow)] sm:p-6"
+              dir="rtl"
+              aria-label="العربية — Arabic"
+              className="group flex flex-col items-center gap-1 px-4 py-7 text-center transition-colors duration-200 hover:bg-neutral-900 focus-visible:bg-neutral-900 focus-visible:outline-none active:bg-neutral-900"
             >
-              <div className="text-lg font-semibold sm:text-2xl" dir="rtl">العربية</div>
-              <div className="mt-0.5 text-[10px] text-muted-foreground sm:mt-1 sm:text-xs">Arabic</div>
+              <span className="text-[21px] font-semibold text-neutral-900 transition-colors group-hover:text-white group-focus-visible:text-white group-active:text-white">
+                العربية
+              </span>
+              <span className="text-[12px] text-neutral-400 transition-colors group-hover:text-white/65 group-focus-visible:text-white/65 group-active:text-white/65">
+                Arabic
+              </span>
             </Link>
             <Link
               to="/book"
               search={{ lang: "en" }}
-              className="group relative overflow-hidden rounded-2xl border border-white/30 bg-card/70 p-4 text-center backdrop-blur-md transition-all hover:-translate-y-0.5 hover:border-primary hover:bg-card/90 hover:shadow-[var(--shadow-glow)] sm:p-6"
+              aria-label="English"
+              className="group flex flex-col items-center gap-1 border-l border-neutral-200 px-4 py-7 text-center transition-colors duration-200 hover:bg-neutral-900 focus-visible:bg-neutral-900 focus-visible:outline-none active:bg-neutral-900"
             >
-              <div className="text-lg font-semibold sm:text-2xl">English</div>
-              <div className="mt-0.5 text-[10px] text-muted-foreground sm:mt-1 sm:text-xs">الإنجليزية</div>
+              <span className="text-[21px] font-semibold text-neutral-900 transition-colors group-hover:text-white group-focus-visible:text-white group-active:text-white">
+                English
+              </span>
+              <span className="text-[12px] text-neutral-400 transition-colors group-hover:text-white/65 group-focus-visible:text-white/65 group-active:text-white/65">
+                الإنجليزية
+              </span>
             </Link>
           </div>
         </div>
+
+        {settings.contact_phone && (
+          <a
+            href={`tel:${settings.contact_phone}`}
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-[13px] text-neutral-600 shadow-sm backdrop-blur transition-colors hover:text-neutral-900"
+          >
+            <Phone className="h-3.5 w-3.5" />
+            <span dir="ltr">{settings.contact_phone}</span>
+          </a>
+        )}
       </main>
-     
-        </footer>
-      )}
     </div>
   );
 }
