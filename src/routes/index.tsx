@@ -27,7 +27,7 @@ function LanguagePage() {
       }}
     >
       <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/50" />
-      <main className="relative flex flex-1 flex-col items-center justify-center px-4 pb-10 pt-[40vh] sm:px-6 sm:py-16">
+      <main className="relative flex flex-1 flex-col items-center justify-center px-4 pb-10 pt-[100vh] sm:px-6 sm:py-16">
         <div className="glass-strong mx-auto w-full max-w-xl rounded-3xl border border-white/20 p-6 shadow-2xl sm:p-10">
           <div className="mb-4 flex justify-center sm:mb-8">
             <span className="inline-flex items-center gap-2 rounded-full bg-primary/15 px-3 py-1 text-[10px] font-medium uppercase tracking-widest text-primary sm:px-4 sm:py-1.5 sm:text-xs">
