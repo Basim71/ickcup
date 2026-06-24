@@ -162,7 +162,7 @@ function SettingsPage() {
               <div className="mt-4">
                 <p className="mb-2 text-xs font-medium text-muted-foreground">Live preview</p>
                 <BookingPreview
-                  bg={draft.background_image}
+                  bg={withCacheBust(draft.background_image, draft.updated_at)}
                   title={draft.texts_en.title || draft.texts_ar.title || ""}
                   subtitle={draft.texts_en.subtitle ?? ""}
                   firstNameLabel={draft.texts_en.firstNameLabel ?? "First Name"}
