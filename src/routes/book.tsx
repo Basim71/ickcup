@@ -1,7 +1,7 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
-import { Phone, Loader2 } from "lucide-react";
+import { Phone, Loader2, ChevronLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteSettings } from "@/lib/settings";
 
@@ -25,6 +25,9 @@ const bookingSchema = z.object({
     .max(30)
     .regex(/^[+\d\s\-()]+$/, "Invalid phone format"),
 });
+
+const inputClass =
+  "w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-[15px] text-neutral-900 outline-none transition-colors placeholder:text-neutral-300 focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10";
 
 function BookPage() {
   const { lang } = Route.useSearch();
@@ -62,10 +65,11 @@ function BookPage() {
   };
 
   const bg = settings.background_image;
+
   return (
     <div
-      className="relative flex min-h-[100dvh] flex-col"
       dir={dir}
+      className="font-public relative flex min-h-[100dvh] flex-col"
       style={{
         backgroundImage: bg ? `url(${bg})` : undefined,
         backgroundSize: "cover",
@@ -74,75 +78,83 @@ function BookPage() {
         backgroundColor: "#ffffff",
       }}
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/50" />
-      <main className="relative flex flex-1 flex-col items-center justify-center px-4 pb-10 pt-[10vh] sm:px-6 sm:py-16">
+      {bg && <div className="absolute inset-0 bg-black/15" />}
+
+      <main className="relative flex flex-1 flex-col items-center justify-center px-5 pb-12 pt-[10vh] sm:px-6 sm:py-16">
         <form
           onSubmit={onSubmit}
-          className="glass-strong w-full max-w-md rounded-3xl border border-white/20 p-6 shadow-2xl sm:p-8"
+          className="w-full max-w-md rounded-[22px] border border-black/5 bg-white p-6 shadow-[0_24px_70px_-32px_rgba(20,20,30,0.45)] sm:p-8"
         >
-          {t.title && <h1 className="text-xl font-semibold tracking-tight sm:text-3xl">{t.title}</h1>}
-          <p className={`text-xs text-muted-foreground sm:text-sm ${t.title ? "mt-1 sm:mt-2" : ""}`}>{t.subtitle}</p>
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1 text-[12px] text-neutral-400 transition-colors hover:text-neutral-700"
+          >
+            <ChevronLeft className="h-3.5 w-3.5 rtl:rotate-180" />
+            {lang === "ar" ? "تغيير اللغة" : "Change language"}
+          </Link>
 
-          <div className="mt-5 space-y-3 sm:mt-8 sm:space-y-5">
-            <div className="grid grid-cols-2 gap-3 sm:gap-4">
+          {t.title && (
+            <h1 className="mt-3 text-[21px] font-semibold leading-tight tracking-tight text-neutral-900 sm:text-[25px]">
+              {t.title}
+            </h1>
+          )}
+          <p className={`text-[14px] text-neutral-500 ${t.title ? "mt-1" : "mt-3"}`}>{t.subtitle}</p>
+
+          <div className="mt-6 space-y-4">
+            <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="mb-1 block text-xs font-medium sm:mb-1.5 sm:text-sm">{t.firstNameLabel}</label>
-                <input
-                  name="first_name"
-                  required
-                  maxLength={60}
-                  className="w-full rounded-xl border border-white/30 bg-background/80 px-3 py-2.5 text-sm outline-none backdrop-blur transition-colors focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 sm:px-4 sm:py-3"
-                />
+                <label className="mb-1.5 block text-[13px] font-medium text-neutral-600">
+                  {t.firstNameLabel}
+                </label>
+                <input name="first_name" required maxLength={60} className={inputClass} />
               </div>
               <div>
-                <label className="mb-1 block text-xs font-medium sm:mb-1.5 sm:text-sm">{t.lastNameLabel}</label>
-                <input
-                  name="last_name"
-                  required
-                  maxLength={60}
-                  className="w-full rounded-xl border border-white/30 bg-background/80 px-3 py-2.5 text-sm outline-none backdrop-blur transition-colors focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 sm:px-4 sm:py-3"
-                />
+                <label className="mb-1.5 block text-[13px] font-medium text-neutral-600">
+                  {t.lastNameLabel}
+                </label>
+                <input name="last_name" required maxLength={60} className={inputClass} />
               </div>
             </div>
             <div>
-              <label className="mb-1 block text-xs font-medium sm:mb-1.5 sm:text-sm">{t.mobileLabel}</label>
+              <label className="mb-1.5 block text-[13px] font-medium text-neutral-600">
+                {t.mobileLabel}
+              </label>
               <input
                 name="mobile_number"
                 required
                 maxLength={30}
                 inputMode="tel"
                 dir="ltr"
-                placeholder="+1 555 123 4567"
-                className="w-full rounded-xl border border-white/30 bg-background/80 px-3 py-2.5 text-sm outline-none backdrop-blur transition-colors focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 sm:px-4 sm:py-3"
+                placeholder="+966 5X XXX XXXX"
+                className={`${inputClass} text-start`}
               />
             </div>
           </div>
 
           {error && (
-            <p className="mt-3 rounded-lg bg-destructive/15 px-3 py-2 text-xs text-destructive sm:mt-4 sm:text-sm">{error}</p>
+            <p className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-[13px] text-red-600">{error}</p>
           )}
 
           <button
             type="submit"
             disabled={submitting}
-            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-lg transition-all hover:shadow-[var(--shadow-glow)] disabled:opacity-60 sm:mt-8"
+            className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-neutral-900 px-4 py-3 text-[14px] font-semibold text-white transition-colors hover:bg-neutral-800 disabled:opacity-60"
           >
             {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
             {t.submitLabel}
           </button>
         </form>
-      </main>
-      {settings.contact_phone && (
-        <footer className="relative px-6 pb-8 text-center text-sm">
+
+        {settings.contact_phone && (
           <a
             href={`tel:${settings.contact_phone}`}
-            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-card/80 px-4 py-2 text-foreground backdrop-blur-md"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-[13px] text-neutral-600 shadow-sm backdrop-blur transition-colors hover:text-neutral-900"
           >
-            <Phone className="h-4 w-4" />
-            {settings.contact_phone}
+            <Phone className="h-3.5 w-3.5" />
+            <span dir="ltr">{settings.contact_phone}</span>
           </a>
-        </footer>
-      )}
+        )}
+      </main>
     </div>
   );
 }
