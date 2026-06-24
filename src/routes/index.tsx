@@ -13,7 +13,7 @@ export const Route = createFileRoute("/")({
 
 function LanguagePage() {
   const { settings } = useSiteSettings();
-  const bg = settings.language_background;
+  const bg = withCacheBust(settings.language_background, settings.updated_at);
 
   return (
     <div
