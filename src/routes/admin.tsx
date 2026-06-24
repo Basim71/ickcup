@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { CalendarDays, QrCode, Settings as SettingsIcon, ArrowUpRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
-export const Route = createFileRoute("/admin/")({
+export const Route = createFileRoute("/admin")({
   component: AdminDashboard,
 });
 
